@@ -13,3 +13,6 @@ c:\users\maggo\documents\visual studio 2012\Projects\ClickDummyStudent\ClickDumm
 C:\Users\Maggo\Documents\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\bin\Debug\ClickDummyStudent.exe.config
 C:\Users\Maggo\Documents\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.exe
 C:\Users\Maggo\Documents\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.pdb
+C:\Users\Benjamin\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\bin\Debug\ClickDummyStudent.exe.config
+C:\Users\Benjamin\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.exe
+C:\Users\Benjamin\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.pdb
