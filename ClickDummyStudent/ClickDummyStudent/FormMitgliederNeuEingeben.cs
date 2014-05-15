@@ -36,13 +36,18 @@ namespace ClickDummyStudent
         private void FormErstanmeldung2_Load(object sender, EventArgs e)
         {
             RefreshDatagrid(this.gruppe);
-            dataGridViewGruppe.Rows[0].ReadOnly = true;
+            alleMitgliederDataGridView.Rows[0].ReadOnly = true;
         }
 
         private void RefreshDatagrid(Gruppe gruppe)
         {
-            dataGridViewGruppe.DataSource = null;
-            dataGridViewGruppe.DataSource = gruppe.studenten;
+            alleMitgliederDataGridView.DataSource = null;
+            alleMitgliederDataGridView.DataSource = gruppe.studenten;
+        }
+
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

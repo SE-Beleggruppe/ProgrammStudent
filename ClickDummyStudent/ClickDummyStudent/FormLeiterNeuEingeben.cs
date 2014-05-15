@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace ClickDummyStudent
 {
@@ -15,6 +16,10 @@ namespace ClickDummyStudent
         public FormLeiterNeuEingeben()
         {
             InitializeComponent();
+            sNummerTextField.Text = "s12345";
+            nachnameTextField.Text = "Test";
+            vornameTextField.Text = "Test";
+            mailTextField.Text = "mail@test.de";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -24,12 +29,21 @@ namespace ClickDummyStudent
                 && vornameTextField.Text != ""
                 && mailTextField.Text != "")
             {
-                if (insertLeiter(sNummerTextField.Text, vornameTextField.Text, nachnameTextField.Text, mailTextField.Text, "Leiter"))
+                if (!checkSNummer(sNummerTextField.Text))
                 {
-                    //FormMitgliederNeuEingeben form2 = new FormMitgliederNeuEingeben();
-                    //form2.Show();
+                    MessageBox.Show("S-Nummer ist fehlerhaft oder schon in der Datenbank vorhanden.");
+                    return;
                 }
-                else MessageBox.Show("Das Einfügen in die Datenbank hat leider nicht geklappt.");
+                if (!checkMail(mailTextField.Text))
+                {
+                    MessageBox.Show("Dies ist keine gültige E-Mail-Adresse.");
+                    return;
+                }
+                insertLeiter(sNummerTextField.Text, vornameTextField.Text, nachnameTextField.Text, mailTextField.Text, "Leiter");
+                Student leiter = new Student(nachnameTextField.Text, vornameTextField.Text, sNummerTextField.Text, mailTextField.Text, "Leiter");
+                FormMitgliederNeuEingeben form2 = new FormMitgliederNeuEingeben(leiter);
+                form2.Show();
+                this.Close();
             }
             else
             {
@@ -42,11 +56,48 @@ namespace ClickDummyStudent
             Application.Exit();
         }
 
-        private bool insertLeiter(string sNummer, string vorname, string nachname, string mail, string rolle)
+        private void insertLeiter(string sNummer, string vorname, string nachname, string mail, string rolle)
         {
             Database db = new Database();
-            List<string[]> output = db.ExecuteQuery("insert into Student values(\"" + sNummer + "\",\"" + vorname + "\",\"" + nachname + "\",\"" + mail + "\",\"" + rolle);
-            return output != null ? true : false;
+            string query = "insert into Student values(\"" + sNummer + "\",\"" + vorname + "\",\"" + nachname + "\",\"" + mail + "\",\"" + rolle + "\")";
+            db.ExecuteQuery(query);
+        }
+
+        private bool checkSNummer(string sNummer)
+        {
+            Database db = new Database();
+            if (sNummer == "") return false;
+            if (sNummer.Length != 6) return false;
+            if (!sNummer.StartsWith("s")) return false;
+            string nummer = sNummer.Substring(1);
+            int n;
+            bool isNummer = int.TryParse(nummer, out n);
+            if (!isNummer) return false;
+
+            List<string[]> output = db.ExecuteQuery("select * from Student");
+            foreach (string[] info in output)
+            {
+                if (info[0] == sNummer) return false;
+            }
+
+            return true;
+        }
+
+        private bool checkMail(string mail)
+        {
+            Regex regExp = new Regex("\\b[!#$%&'*+./0-9=?_`a-z{|}~^-]+@[.0-9a-z-]+\\.[a-z]{2,6}\\b");
+            Match match = regExp.Match(mail);
+            if (match.Success)
+            {
+                Database db = new Database();
+                List<string[]> output = db.ExecuteQuery("select * from Student");
+                foreach (string[] info in output)
+                {
+                    if(info[3] == mail) return false;
+                }
+                return true;
+            }
+            else return false;
         }
     }
 }

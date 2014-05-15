@@ -29,83 +29,91 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.dataGridViewGruppe = new System.Windows.Forms.DataGridView();
+            this.alleMitgliederDataGridView = new System.Windows.Forms.DataGridView();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewGruppe)).BeginInit();
+            this.newPasswortTextBox = new System.Windows.Forms.TextBox();
+            this.cancelButton = new System.Windows.Forms.Button();
+            this.CommitButton = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.alleMitgliederDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(24, 17);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(422, 13);
+            this.label1.Size = new System.Drawing.Size(859, 25);
             this.label1.TabIndex = 0;
             this.label1.Text = "Sie können nun weitere Gruppenmitglieder eintragen, oder dies im Nachhinein erled" +
     "igen.";
             // 
-            // dataGridViewGruppe
+            // alleMitgliederDataGridView
             // 
-            this.dataGridViewGruppe.AllowUserToAddRows = false;
-            this.dataGridViewGruppe.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewGruppe.Location = new System.Drawing.Point(15, 36);
-            this.dataGridViewGruppe.Name = "dataGridViewGruppe";
-            this.dataGridViewGruppe.Size = new System.Drawing.Size(641, 150);
-            this.dataGridViewGruppe.TabIndex = 1;
+            this.alleMitgliederDataGridView.AllowUserToAddRows = false;
+            this.alleMitgliederDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.alleMitgliederDataGridView.Location = new System.Drawing.Point(30, 69);
+            this.alleMitgliederDataGridView.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.alleMitgliederDataGridView.Name = "alleMitgliederDataGridView";
+            this.alleMitgliederDataGridView.Size = new System.Drawing.Size(1282, 288);
+            this.alleMitgliederDataGridView.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 196);
+            this.label2.Location = new System.Drawing.Point(30, 377);
+            this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(276, 13);
+            this.label2.Size = new System.Drawing.Size(555, 25);
             this.label2.TabIndex = 2;
             this.label2.Text = "Legen Sie abschließend noch ein Gruppenkennwort fest:";
             // 
-            // textBox1
+            // newPasswortTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(297, 193);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(137, 20);
-            this.textBox1.TabIndex = 3;
+            this.newPasswortTextBox.Location = new System.Drawing.Point(594, 371);
+            this.newPasswortTextBox.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.newPasswortTextBox.Name = "newPasswortTextBox";
+            this.newPasswortTextBox.Size = new System.Drawing.Size(270, 31);
+            this.newPasswortTextBox.TabIndex = 3;
             // 
-            // button1
+            // cancelButton
             // 
-            this.button1.Location = new System.Drawing.Point(581, 190);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Abbrechen";
-            this.button1.UseVisualStyleBackColor = true;
+            this.cancelButton.Location = new System.Drawing.Point(1162, 365);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(150, 44);
+            this.cancelButton.TabIndex = 4;
+            this.cancelButton.Text = "Abbrechen";
+            this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // button2
+            // CommitButton
             // 
-            this.button2.Location = new System.Drawing.Point(440, 191);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(135, 23);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Anmeldung abschließen";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.CommitButton.Location = new System.Drawing.Point(880, 367);
+            this.CommitButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.CommitButton.Name = "CommitButton";
+            this.CommitButton.Size = new System.Drawing.Size(270, 44);
+            this.CommitButton.TabIndex = 5;
+            this.CommitButton.Text = "Anmeldung abschließen";
+            this.CommitButton.UseVisualStyleBackColor = true;
+            this.CommitButton.Click += new System.EventHandler(this.button2_Click);
             // 
-            // FormErstanmeldung2
+            // FormMitgliederNeuEingeben
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(668, 261);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
+            this.ClientSize = new System.Drawing.Size(1336, 502);
+            this.Controls.Add(this.CommitButton);
+            this.Controls.Add(this.cancelButton);
+            this.Controls.Add(this.newPasswortTextBox);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.dataGridViewGruppe);
+            this.Controls.Add(this.alleMitgliederDataGridView);
             this.Controls.Add(this.label1);
-            this.Name = "FormErstanmeldung2";
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Name = "FormMitgliederNeuEingeben";
             this.Text = "FormErstanmeldung2";
             this.Load += new System.EventHandler(this.FormErstanmeldung2_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewGruppe)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alleMitgliederDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -114,10 +122,10 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridView dataGridViewGruppe;
+        private System.Windows.Forms.DataGridView alleMitgliederDataGridView;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox newPasswortTextBox;
+        private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.Button CommitButton;
     }
 }
