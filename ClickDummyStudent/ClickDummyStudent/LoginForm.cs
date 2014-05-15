@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions; 
 
 namespace ClickDummyStudent
 {
@@ -19,28 +20,64 @@ namespace ClickDummyStudent
 
         private void LoginButton_Click(object sender, EventArgs e)
         {
-               if (tboLogin.Text == "belegkennung")
+            Regex regExBelegKennung = new Regex("^beleg");
+            Regex regExGruppenKennung = new Regex("^case");
+               if (checkGruppeLogin(loginTextField.Text,passwordTextField.Text))
                {
-                  if (tboPasswort.Text == "")
-                  {
-                     FormErstanmeldung1 FormErstanmeldung1 = new FormErstanmeldung1();
-                     FormErstanmeldung1.Show();
-                     Hide();
-                  }
-                }
-                else if (tboLogin.Text == "caseXX")
-                {
-                    if (tboPasswort.Text == "")
-                    {
-                        MainForm mainForm = new MainForm();
-                        mainForm.Show();
-                        Hide();
-                    }
+                    MainForm mainForm = new MainForm();
+                    mainForm.Show();
+                    Hide();
                 }
                 else
                 {
-                    MessageBox.Show("Kombination aus Login/Passwort nicht korrekt.");
-                }       
+                  if (checkBelegLogin(loginTextField.Text, passwordTextField.Text))
+                  {
+                     FormLeiterNeuEingeben leiterEingeben = new FormLeiterNeuEingeben();
+                     leiterEingeben.Show();
+                     Hide();
+                  }
+                }   
+        }
+
+        private bool checkBelegLogin(string login, string password)
+        {
+            Database db = new Database();
+            List<string[]> output = db.ExecuteQuery("select * from Beleg");
+            foreach (string[] info in output)
+            {
+                if (info[0] == login)
+                {
+                    if (info[6] == password)
+                    {
+                        return true;
+                    }
+                    else return false;
+                }
+            }
+            return false;
+        }
+
+        private bool checkGruppeLogin(string login, string password)
+        {
+            Database db = new Database();
+            List<string[]> output = db.ExecuteQuery("select * from Gruppe");
+            foreach (string[] info in output)
+            {
+                if (info[0] == login)
+                {
+                    if (info[2] == password)
+                    {
+                        return true;
+                    }
+                    else return false;
+                }
+            }
+            return false;
+        }
+
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
