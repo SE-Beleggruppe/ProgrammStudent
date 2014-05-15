@@ -32,7 +32,7 @@ namespace ClickDummyStudent
                 {
                   if (checkBelegLogin(loginTextField.Text, passwordTextField.Text))
                   {
-                     FormLeiterNeuEingeben leiterEingeben = new FormLeiterNeuEingeben();
+                      FormLeiterNeuEingeben leiterEingeben = new FormLeiterNeuEingeben(loginTextField.Text);
                      leiterEingeben.Show();
                      Hide();
                   }

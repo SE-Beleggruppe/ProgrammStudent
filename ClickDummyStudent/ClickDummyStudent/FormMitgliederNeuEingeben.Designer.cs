@@ -53,7 +53,7 @@
             this.alleMitgliederDataGridView.AllowUserToAddRows = false;
             this.alleMitgliederDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.alleMitgliederDataGridView.Location = new System.Drawing.Point(30, 69);
-            this.alleMitgliederDataGridView.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.alleMitgliederDataGridView.Margin = new System.Windows.Forms.Padding(6);
             this.alleMitgliederDataGridView.Name = "alleMitgliederDataGridView";
             this.alleMitgliederDataGridView.Size = new System.Drawing.Size(1282, 288);
             this.alleMitgliederDataGridView.TabIndex = 1;
@@ -71,7 +71,7 @@
             // newPasswortTextBox
             // 
             this.newPasswortTextBox.Location = new System.Drawing.Point(594, 371);
-            this.newPasswortTextBox.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.newPasswortTextBox.Margin = new System.Windows.Forms.Padding(6);
             this.newPasswortTextBox.Name = "newPasswortTextBox";
             this.newPasswortTextBox.Size = new System.Drawing.Size(270, 31);
             this.newPasswortTextBox.TabIndex = 3;
@@ -79,7 +79,7 @@
             // cancelButton
             // 
             this.cancelButton.Location = new System.Drawing.Point(1162, 365);
-            this.cancelButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(6);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(150, 44);
             this.cancelButton.TabIndex = 4;
@@ -90,29 +90,28 @@
             // CommitButton
             // 
             this.CommitButton.Location = new System.Drawing.Point(880, 367);
-            this.CommitButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.CommitButton.Margin = new System.Windows.Forms.Padding(6);
             this.CommitButton.Name = "CommitButton";
             this.CommitButton.Size = new System.Drawing.Size(270, 44);
             this.CommitButton.TabIndex = 5;
             this.CommitButton.Text = "Anmeldung abschließen";
             this.CommitButton.UseVisualStyleBackColor = true;
-            this.CommitButton.Click += new System.EventHandler(this.button2_Click);
+            this.CommitButton.Click += new System.EventHandler(this.commitButton_Click);
             // 
             // FormMitgliederNeuEingeben
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1336, 502);
+            this.ClientSize = new System.Drawing.Size(1347, 502);
             this.Controls.Add(this.CommitButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.newPasswortTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.alleMitgliederDataGridView);
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "FormMitgliederNeuEingeben";
             this.Text = "FormErstanmeldung2";
-            this.Load += new System.EventHandler(this.FormErstanmeldung2_Load);
             ((System.ComponentModel.ISupportInitialize)(this.alleMitgliederDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

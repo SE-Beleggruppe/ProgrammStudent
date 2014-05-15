@@ -13,9 +13,11 @@ namespace ClickDummyStudent
 {
     public partial class FormLeiterNeuEingeben : Form
     {
-        public FormLeiterNeuEingeben()
+        public string Belegkennung;
+        public FormLeiterNeuEingeben( string belegKennung)
         {
             InitializeComponent();
+            this.Belegkennung = belegKennung;
             sNummerTextField.Text = "s12345";
             nachnameTextField.Text = "Test";
             vornameTextField.Text = "Test";
@@ -39,9 +41,9 @@ namespace ClickDummyStudent
                     MessageBox.Show("Dies ist keine gültige E-Mail-Adresse.");
                     return;
                 }
-                insertLeiter(sNummerTextField.Text, vornameTextField.Text, nachnameTextField.Text, mailTextField.Text, "Leiter");
+                
                 Student leiter = new Student(nachnameTextField.Text, vornameTextField.Text, sNummerTextField.Text, mailTextField.Text, "Leiter");
-                FormMitgliederNeuEingeben form2 = new FormMitgliederNeuEingeben(leiter);
+                FormMitgliederNeuEingeben form2 = new FormMitgliederNeuEingeben(leiter, this.Belegkennung);
                 form2.Show();
                 this.Close();
             }
@@ -56,12 +58,7 @@ namespace ClickDummyStudent
             Application.Exit();
         }
 
-        private void insertLeiter(string sNummer, string vorname, string nachname, string mail, string rolle)
-        {
-            Database db = new Database();
-            string query = "insert into Student values(\"" + sNummer + "\",\"" + vorname + "\",\"" + nachname + "\",\"" + mail + "\",\"" + rolle + "\")";
-            db.ExecuteQuery(query);
-        }
+        
 
         private bool checkSNummer(string sNummer)
         {
