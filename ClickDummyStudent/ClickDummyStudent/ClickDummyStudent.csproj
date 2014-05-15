@@ -33,9 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Sybase.AdoNet4.AseClient, Version=16.0.0.2, Culture=neutral, PublicKeyToken=95d94fac46c88e1e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\SAP\DataAccess64\ADONET\dll\Sybase.AdoNet4.AseClient.dll</HintPath>
+    <Reference Include="Sybase.AdoNet4.AseClient">
+      <HintPath>..\..\..\ProgrammDozent\ProgrammDozent\ClickDummy\bin\Debug\Sybase.AdoNet4.AseClient.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -97,6 +96,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

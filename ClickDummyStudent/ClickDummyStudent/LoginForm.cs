@@ -19,26 +19,16 @@ namespace ClickDummyStudent
 
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            if (ErstAnmeldungCheckBox.Checked == true)
-            {
-                 if (tboLogin.Text == "")
-                    {
-                        if (tboPasswort.Text == "")
-                        {
-                            FormErstanmeldung1 FormErstanmeldung1 = new FormErstanmeldung1();
-                            FormErstanmeldung1.Show();
-                            Hide();
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Kombination aus Login/Passwort nicht korrekt.");
-                    }
-            }
-
-            else
-            {
-                if (tboLogin.Text == "")
+               if (tboLogin.Text == "belegkennung")
+               {
+                  if (tboPasswort.Text == "")
+                  {
+                     FormErstanmeldung1 FormErstanmeldung1 = new FormErstanmeldung1();
+                     FormErstanmeldung1.Show();
+                     Hide();
+                  }
+                }
+                else if (tboLogin.Text == "caseXX")
                 {
                     if (tboPasswort.Text == "")
                     {
@@ -50,8 +40,7 @@ namespace ClickDummyStudent
                 else
                 {
                     MessageBox.Show("Kombination aus Login/Passwort nicht korrekt.");
-                }
-            }       
+                }       
         }
     }
 }

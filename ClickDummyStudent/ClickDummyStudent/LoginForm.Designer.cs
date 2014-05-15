@@ -32,7 +32,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tboLogin = new System.Windows.Forms.TextBox();
             this.tboPasswort = new System.Windows.Forms.TextBox();
-            this.ErstAnmeldungCheckBox = new System.Windows.Forms.CheckBox();
             this.LoginButton = new System.Windows.Forms.Button();
             this.CloseButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -69,16 +68,6 @@
             this.tboPasswort.Size = new System.Drawing.Size(156, 20);
             this.tboPasswort.TabIndex = 3;
             // 
-            // ErstAnmeldungCheckBox
-            // 
-            this.ErstAnmeldungCheckBox.AutoSize = true;
-            this.ErstAnmeldungCheckBox.Location = new System.Drawing.Point(15, 67);
-            this.ErstAnmeldungCheckBox.Name = "ErstAnmeldungCheckBox";
-            this.ErstAnmeldungCheckBox.Size = new System.Drawing.Size(96, 17);
-            this.ErstAnmeldungCheckBox.TabIndex = 4;
-            this.ErstAnmeldungCheckBox.Text = "Erstanmeldung";
-            this.ErstAnmeldungCheckBox.UseVisualStyleBackColor = true;
-            // 
             // LoginButton
             // 
             this.LoginButton.Location = new System.Drawing.Point(124, 65);
@@ -105,7 +94,6 @@
             this.ClientSize = new System.Drawing.Size(293, 96);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.LoginButton);
-            this.Controls.Add(this.ErstAnmeldungCheckBox);
             this.Controls.Add(this.tboPasswort);
             this.Controls.Add(this.tboLogin);
             this.Controls.Add(this.label2);
@@ -123,7 +111,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tboLogin;
         private System.Windows.Forms.TextBox tboPasswort;
-        private System.Windows.Forms.CheckBox ErstAnmeldungCheckBox;
         private System.Windows.Forms.Button LoginButton;
         private System.Windows.Forms.Button CloseButton;
     }
