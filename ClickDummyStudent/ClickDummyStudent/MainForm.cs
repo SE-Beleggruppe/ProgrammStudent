@@ -15,12 +15,36 @@ namespace ClickDummyStudent
         Gruppe gruppe;
         List<string> rollen = new List<string>();
         DataGridViewComboBoxColumn cmb;
-        public MainForm(Gruppe gruppe)
+        public MainForm(string gruppenKennung, string belegkennung)
         {
             InitializeComponent();
-            this.gruppe = gruppe;
-            loadStudentenInGruppe(gruppe);
+            this.gruppe = getGruppeFromKennungS(gruppenKennung, belegkennung);
+            this.gruppe.Belegkennung = belegkennung;
+            updateMitgliederData();
             updateThemen();
+        }
+
+        private Gruppe getGruppeFromKennungS(string kennung, string belegkennung)
+        {
+            Database db = new Database();
+            foreach (string[] info in db.ExecuteQuery("select * from Gruppe where Gruppenkennung=\"" + kennung + "\""))
+            {
+                Gruppe neu = new Gruppe(info[0], Convert.ToInt32(info[1]), info[2]);
+                neu.Belegkennung = belegkennung;
+                foreach (string[] info2 in db.ExecuteQuery("select * from Student where sNummer in (select sNummer from Zuordnung_GruppeStudent where Gruppenkennung=\"" + kennung + "\")"))
+                {
+                    neu.addStudent(new Student(info2[2], info2[1], info2[0], info2[3], info2[4]));
+                }
+                int minAnz = getMinAnzahlMitglieder(neu.Belegkennung);
+                int studentenCount = neu.studenten.Count;
+                if(neu.studenten.Count < minAnz)
+                {
+                    for (int i = 0; i < minAnz - studentenCount; i++)
+                        neu.addStudent(new Student("na", "na", "na", "na", "na"));
+                }
+                return neu;
+            }
+            return null;
         }
 
         private void updateMitgliederData()
@@ -33,6 +57,7 @@ namespace ClickDummyStudent
             cmb.Name = "cmb";
             updateRollen();
             mitgliederDataGridView.Columns.Add(cmb);
+            string a = cmb.ValueMember;
         }
 
         private void updateThemen()
@@ -47,18 +72,6 @@ namespace ClickDummyStudent
             comboBoxThemen.DataSource = erg;
         }
 
-        private void loadStudentenInGruppe(Gruppe gruppe)
-        {
-            Database db = new Database();
-            string query = "select * from Student where sNummer in (select sNummer from Zuordnung_GruppeStudent where Gruppenkennung=\"" + gruppe.gruppenKennung + "\")";
-            List<string[]> output = db.ExecuteQuery(query);
-            foreach (string[] info in output)
-            {
-                gruppe.addStudent(new Student(info[2],info[1],info[0],info[3],info[4]));
-            }
-            updateMitgliederData();
-        }
-
         private void updateRollen()
         {
             rollen = new List<string>();
@@ -68,14 +81,28 @@ namespace ClickDummyStudent
             {
                 rollen.Add(info[0]);
             }
+            rollen.Add("na");
             cmb.DataSource = null;
             cmb.DataSource = rollen;
             int count = 0;
             foreach (Student info in gruppe.studenten)
             {
-                mitgliederDataGridView.Rows[count].Cells[4].Value = info.rolle;
+#warning TO DO SET INFO.ROLLE AS VALUE OF COMBOBOX
                 count++;
             }
+        }
+
+        private int getMinAnzahlMitglieder(string beKennung)
+        {
+            Database db = new Database();
+            List<string[]> output = db.ExecuteQuery("select MinAnzMitglieder from Beleg where Belegkennung=\"" + beKennung + "\"");
+            return Convert.ToInt32(output.First()[0]);
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            Application.Exit();
         }
     }
 }

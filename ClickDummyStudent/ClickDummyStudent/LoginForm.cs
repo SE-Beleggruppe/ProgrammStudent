@@ -25,7 +25,7 @@ namespace ClickDummyStudent
             Regex regExGruppenKennung = new Regex("^case");
                if (checkGruppeLogin(loginTextField.Text,passwordTextField.Text))
                {
-                    MainForm mainForm = new MainForm(getGruppeFromKennung(loginTextField.Text));
+                    MainForm mainForm = new MainForm(loginTextField.Text, getBelegKennungFromGruppenKennung(loginTextField.Text));
                     mainForm.Show();
                     Hide();
                 }
@@ -96,24 +96,24 @@ namespace ClickDummyStudent
             return false;
         }
 
-        private Gruppe getGruppeFromKennung(string kennung)
-        {
-            Database db = new Database();
-            string query = "select * from Gruppe where Gruppenkennung=\"" + kennung + "\"";
-            List<string[]> output = db.ExecuteQuery(query);
-            foreach (string[] info in output)
-            {
-                int n;
-                int.TryParse(info[1],out n);
-                Gruppe erg =  new Gruppe(info[0], n, info[2]);
-                if (erg != null)
-                {
-                    erg.Belegkennung = getBelegKennungFromGruppenKennung(erg.gruppenKennung);
-                    return erg;
-                }
-            }
-            return null;
-        }
+        //private Gruppe getGruppeFromKennung(string kennung)
+        //{
+        //    Database db = new Database();
+        //    string query = "select * from Gruppe where Gruppenkennung=\"" + kennung + "\"";
+        //    List<string[]> output = db.ExecuteQuery(query);
+        //    foreach (string[] info in output)
+        //    {
+        //        int n;
+        //        int.TryParse(info[1],out n);
+        //        Gruppe erg =  new Gruppe(info[0], n, info[2]);
+        //        if (erg != null)
+        //        {
+        //            erg.Belegkennung = getBelegKennungFromGruppenKennung(erg.gruppenKennung);
+        //            return erg;
+        //        }
+        //    }
+        //    return null;
+        //}
 
         private string getBelegKennungFromGruppenKennung(string kennung)
         {

@@ -44,7 +44,7 @@ namespace ClickDummyStudent
             gruppe.password = newPasswortTextBox.Text;
             saveGruppeInDatabase();
             MessageBox.Show("Anmeldung abgeschlossen! \nIhre Gruppenkennung lautet: " + gruppe.gruppenKennung + "\n(Wichtig für das spätere Anmelden!)");
-            MainForm form = new MainForm(gruppe);
+            MainForm form = new MainForm(gruppe.gruppenKennung, gruppe.Belegkennung);
             form.Show();
         }
 

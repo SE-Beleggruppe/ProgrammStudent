@@ -42,7 +42,7 @@ namespace ClickDummyStudent
                     return;
                 }
                 
-                Student leiter = new Student(nachnameTextField.Text, vornameTextField.Text, sNummerTextField.Text, mailTextField.Text, "Leiter");
+                Student leiter = new Student(nachnameTextField.Text, vornameTextField.Text, sNummerTextField.Text, mailTextField.Text, "Leitung");
                 FormMitgliederNeuEingeben form2 = new FormMitgliederNeuEingeben(leiter, this.Belegkennung);
                 form2.Show();
                 this.Close();
