@@ -94,8 +94,8 @@ namespace ClickDummyStudent
             Database db = new Database();
             string query = "select Themennummer from Zuordnung_BelegThema where Belegkennung=\"" + Belegkennung + "\"";
             List<string[]> output = db.ExecuteQuery(query);
-            int nr;
-            int.TryParse(output.First()[0], out nr);
+            int nr = 0;
+            if(output.Count > 0) int.TryParse(output.First()[0], out nr);
             return nr;
         }
 
