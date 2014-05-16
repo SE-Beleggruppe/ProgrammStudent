@@ -29,9 +29,12 @@
         private void InitializeComponent()
         {
             this.mitgliederDataGridView = new System.Windows.Forms.DataGridView();
-            this.editTableButton = new System.Windows.Forms.Button();
+            this.Nachname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Vorname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sNummer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mail = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Rolle = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.saveButton = new System.Windows.Forms.Button();
-            this.cancelButton = new System.Windows.Forms.Button();
             this.comboBoxThemen = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.mitgliederDataGridView)).BeginInit();
@@ -40,37 +43,51 @@
             // mitgliederDataGridView
             // 
             this.mitgliederDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.mitgliederDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Nachname,
+            this.Vorname,
+            this.sNummer,
+            this.mail,
+            this.Rolle});
             this.mitgliederDataGridView.Location = new System.Drawing.Point(12, 12);
             this.mitgliederDataGridView.Name = "mitgliederDataGridView";
-            this.mitgliederDataGridView.Size = new System.Drawing.Size(620, 215);
+            this.mitgliederDataGridView.Size = new System.Drawing.Size(803, 215);
             this.mitgliederDataGridView.TabIndex = 0;
             // 
-            // editTableButton
+            // Nachname
             // 
-            this.editTableButton.Location = new System.Drawing.Point(375, 233);
-            this.editTableButton.Name = "editTableButton";
-            this.editTableButton.Size = new System.Drawing.Size(104, 23);
-            this.editTableButton.TabIndex = 1;
-            this.editTableButton.Text = "Tabelle bearbeiten";
-            this.editTableButton.UseVisualStyleBackColor = true;
+            this.Nachname.HeaderText = "Nachname";
+            this.Nachname.Name = "Nachname";
+            // 
+            // Vorname
+            // 
+            this.Vorname.HeaderText = "Vorname";
+            this.Vorname.Name = "Vorname";
+            // 
+            // sNummer
+            // 
+            this.sNummer.HeaderText = "S-Nummer";
+            this.sNummer.Name = "sNummer";
+            // 
+            // mail
+            // 
+            this.mail.HeaderText = "Mail";
+            this.mail.Name = "mail";
+            // 
+            // Rolle
+            // 
+            this.Rolle.HeaderText = "rolle";
+            this.Rolle.Name = "Rolle";
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(485, 233);
+            this.saveButton.Location = new System.Drawing.Point(310, 235);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(71, 23);
             this.saveButton.TabIndex = 2;
             this.saveButton.Text = "Speichern";
             this.saveButton.UseVisualStyleBackColor = true;
-            // 
-            // cancelButton
-            // 
-            this.cancelButton.Location = new System.Drawing.Point(562, 233);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(71, 23);
-            this.cancelButton.TabIndex = 3;
-            this.cancelButton.Text = "Abbrechen";
-            this.cancelButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // comboBoxThemen
             // 
@@ -93,12 +110,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(640, 267);
+            this.ClientSize = new System.Drawing.Size(827, 267);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxThemen);
-            this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.saveButton);
-            this.Controls.Add(this.editTableButton);
             this.Controls.Add(this.mitgliederDataGridView);
             this.Name = "MainForm";
             this.Text = "MainForm";
@@ -111,11 +126,14 @@
         #endregion
 
         private System.Windows.Forms.DataGridView mitgliederDataGridView;
-        private System.Windows.Forms.Button editTableButton;
         private System.Windows.Forms.Button saveButton;
-        private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.ComboBox comboBoxThemen;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Nachname;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Vorname;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sNummer;
+        private System.Windows.Forms.DataGridViewTextBoxColumn mail;
+        private System.Windows.Forms.DataGridViewComboBoxColumn Rolle;
     }
 }
 
