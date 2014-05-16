@@ -31,21 +31,21 @@ namespace ClickDummyStudent
                 }
                 else
                 {
-                  if (checkBelegLogin(loginTextField.Text, passwordTextField.Text))
-                  {
-                      if (freieGruppen(loginTextField.Text))
-                      {
-                             FormLeiterNeuEingeben leiterEingeben = new FormLeiterNeuEingeben(loginTextField.Text);
-                             leiterEingeben.Show();
-                             Hide();
-                      }
-                      else
-                      {
-                          MessageBox.Show("Für diesen Beleg gibt es keine freien Gruppen mehr. Bitte melden Sie sich beim Dozenten.");
-                          Application.Exit();
-                      }
-                     
-                  }
+                    if (checkBelegLogin(loginTextField.Text, passwordTextField.Text))
+                    {
+                        if (freieGruppen(loginTextField.Text))
+                        {
+                            FormLeiterNeuEingeben leiterEingeben = new FormLeiterNeuEingeben(loginTextField.Text);
+                            leiterEingeben.Show();
+                            Hide();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Für diesen Beleg gibt es keine freien Gruppen mehr. Bitte melden Sie sich beim Dozenten.");
+                            Application.Exit();
+                        }
+                    }
+                    else MessageBox.Show("Kombination Login/Passwort ist falsch.");
                 }   
         }
 
@@ -95,25 +95,6 @@ namespace ClickDummyStudent
             }
             return false;
         }
-
-        //private Gruppe getGruppeFromKennung(string kennung)
-        //{
-        //    Database db = new Database();
-        //    string query = "select * from Gruppe where Gruppenkennung=\"" + kennung + "\"";
-        //    List<string[]> output = db.ExecuteQuery(query);
-        //    foreach (string[] info in output)
-        //    {
-        //        int n;
-        //        int.TryParse(info[1],out n);
-        //        Gruppe erg =  new Gruppe(info[0], n, info[2]);
-        //        if (erg != null)
-        //        {
-        //            erg.Belegkennung = getBelegKennungFromGruppenKennung(erg.gruppenKennung);
-        //            return erg;
-        //        }
-        //    }
-        //    return null;
-        //}
 
         private string getBelegKennungFromGruppenKennung(string kennung)
         {
