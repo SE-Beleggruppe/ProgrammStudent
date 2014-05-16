@@ -28,49 +28,49 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.mitgliederDataGridView = new System.Windows.Forms.DataGridView();
+            this.editTableButton = new System.Windows.Forms.Button();
+            this.saveButton = new System.Windows.Forms.Button();
+            this.cancelButton = new System.Windows.Forms.Button();
             this.comboBoxThemen = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mitgliederDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
-            // dataGridView1
+            // mitgliederDataGridView
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 12);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(620, 215);
-            this.dataGridView1.TabIndex = 0;
+            this.mitgliederDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.mitgliederDataGridView.Location = new System.Drawing.Point(12, 12);
+            this.mitgliederDataGridView.Name = "mitgliederDataGridView";
+            this.mitgliederDataGridView.Size = new System.Drawing.Size(620, 215);
+            this.mitgliederDataGridView.TabIndex = 0;
             // 
-            // button1
+            // editTableButton
             // 
-            this.button1.Location = new System.Drawing.Point(375, 233);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(104, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Tabelle bearbeiten";
-            this.button1.UseVisualStyleBackColor = true;
+            this.editTableButton.Location = new System.Drawing.Point(375, 233);
+            this.editTableButton.Name = "editTableButton";
+            this.editTableButton.Size = new System.Drawing.Size(104, 23);
+            this.editTableButton.TabIndex = 1;
+            this.editTableButton.Text = "Tabelle bearbeiten";
+            this.editTableButton.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // saveButton
             // 
-            this.button2.Location = new System.Drawing.Point(485, 233);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(71, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Speichern";
-            this.button2.UseVisualStyleBackColor = true;
+            this.saveButton.Location = new System.Drawing.Point(485, 233);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(71, 23);
+            this.saveButton.TabIndex = 2;
+            this.saveButton.Text = "Speichern";
+            this.saveButton.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // cancelButton
             // 
-            this.button3.Location = new System.Drawing.Point(562, 233);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(71, 23);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Abbrechen";
-            this.button3.UseVisualStyleBackColor = true;
+            this.cancelButton.Location = new System.Drawing.Point(562, 233);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(71, 23);
+            this.cancelButton.TabIndex = 3;
+            this.cancelButton.Text = "Abbrechen";
+            this.cancelButton.UseVisualStyleBackColor = true;
             // 
             // comboBoxThemen
             // 
@@ -96,13 +96,13 @@
             this.ClientSize = new System.Drawing.Size(640, 267);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxThemen);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.cancelButton);
+            this.Controls.Add(this.saveButton);
+            this.Controls.Add(this.editTableButton);
+            this.Controls.Add(this.mitgliederDataGridView);
             this.Name = "MainForm";
             this.Text = "MainForm";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mitgliederDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -110,10 +110,10 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.DataGridView mitgliederDataGridView;
+        private System.Windows.Forms.Button editTableButton;
+        private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.ComboBox comboBoxThemen;
         private System.Windows.Forms.Label label1;
     }

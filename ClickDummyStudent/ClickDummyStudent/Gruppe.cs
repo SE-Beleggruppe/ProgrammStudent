@@ -21,6 +21,14 @@ namespace ClickDummyStudent
             this.studenten = new List<Student>();
         }
 
+        public Gruppe(string kennung, int themennummer, string password)
+        {
+            this.gruppenKennung = kennung;
+            this.themenNummer = themenNummer;
+            this.password = password;
+            this.studenten = new List<Student>();
+        }
+
         public void addStudent(Student student)
         {
             if(student != null) this.studenten.Add(student);
