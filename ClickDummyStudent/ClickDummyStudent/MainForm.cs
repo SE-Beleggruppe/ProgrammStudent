@@ -14,15 +14,18 @@ namespace ClickDummyStudent
     {
         Gruppe gruppe;
         List<string> rollen = new List<string>();
+        int maxAnzahl;
         public MainForm(string gruppenKennung, string belegkennung)
         {
             InitializeComponent();
             this.gruppe = getGruppeFromKennungS(gruppenKennung, belegkennung);
             this.gruppe.Belegkennung = belegkennung;
+            maxAnzahl = getMaxAnzahlMitglieder(belegkennung);
             updateRollen();
             updateMitgliederData();
             updateThemen();
         }
+
 
         private Gruppe getGruppeFromKennungS(string kennung, string belegkennung)
         {
@@ -74,7 +77,8 @@ namespace ClickDummyStudent
                 erg.Add(info[0]);
             }
             comboBoxThemen.DataSource = erg;
-            comboBoxThemen.SelectedItem = erg.First();
+
+            comboBoxThemen.SelectedItem = db.ExecuteQuery("select Aufgabe from Thema where Themennummer in (select Themennummer from Gruppe where Gruppenkennung=\"" + gruppe.gruppenKennung + "\")").First()[0];
         }
 
         private void updateRollen()
@@ -93,6 +97,13 @@ namespace ClickDummyStudent
         {
             Database db = new Database();
             List<string[]> output = db.ExecuteQuery("select MinAnzMitglieder from Beleg where Belegkennung=\"" + beKennung + "\"");
+            return Convert.ToInt32(output.First()[0]);
+        }
+
+        private int getMaxAnzahlMitglieder(string beKennung)
+        {
+            Database db = new Database();
+            List<string[]> output = db.ExecuteQuery("select MaxAnzMitglieder from Beleg where Belegkennung=\"" + beKennung + "\"");
             return Convert.ToInt32(output.First()[0]);
         }
 
