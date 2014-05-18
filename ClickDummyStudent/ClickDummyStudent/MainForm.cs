@@ -54,6 +54,7 @@ namespace ClickDummyStudent
         {
             mitgliederDataGridView.Rows.Clear();
             (mitgliederDataGridView.Columns[4] as DataGridViewComboBoxColumn).DataSource = rollen;
+            (mitgliederDataGridView.Columns[4] as DataGridViewComboBoxColumn).MinimumWidth = 150;
             (mitgliederDataGridView.Columns[3] as DataGridViewTextBoxColumn).MinimumWidth = 250;
             foreach (Student info in gruppe.studenten)
             {

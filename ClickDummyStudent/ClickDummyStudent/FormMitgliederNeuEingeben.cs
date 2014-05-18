@@ -14,6 +14,7 @@ namespace ClickDummyStudent
     {
         Gruppe gruppe;
         public string Belegkennung;
+        List<string> rollen;
         public FormMitgliederNeuEingeben(Student leiter, string belegKennung)
         {
             InitializeComponent();
@@ -34,13 +35,18 @@ namespace ClickDummyStudent
             {
                 gruppe.addStudent(new Student("na","na","na","na","na"));
             }
-
+            updateRollen();
             RefreshDatagrid(this.gruppe);
             alleMitgliederDataGridView.Rows[0].ReadOnly = true;
         }
 
         private void commitButton_Click(object sender, EventArgs e)
         {
+            if (newPasswortTextBox.Text == "")
+            {
+                MessageBox.Show("Bitte geben Sie ein Passwort ein, mit dem SIe später auf die Gruppe zugreifen können.");
+                return;
+            }
             gruppe.password = newPasswortTextBox.Text;
             saveGruppeInDatabase();
             MessageBox.Show("Anmeldung abgeschlossen! \nIhre Gruppenkennung lautet: " + gruppe.gruppenKennung + "\n(Wichtig für das spätere Anmelden!)");
@@ -48,18 +54,33 @@ namespace ClickDummyStudent
             form.Show();
         }
 
+        private void updateRollen()
+        {
+            rollen = new List<string>();
+            Database db = new Database();
+            List<string[]> output = db.ExecuteQuery("Select Rolle from Rolle where Rolle in (select Rolle from Zuordnung_BelegRolle where Belegkennung=\"" + gruppe.Belegkennung + "\")");
+            foreach (string[] info in output)
+            {
+                rollen.Add(info[0]);
+            }
+            rollen.Add("na");
+        }
+
         private void RefreshDatagrid(Gruppe gruppe)
         {
-            alleMitgliederDataGridView.DataSource = null;
-            alleMitgliederDataGridView.DataSource = gruppe.studenten;
-            alleMitgliederDataGridView.Columns[4].Visible = false;
-            DataGridViewComboBoxColumn cmb = new DataGridViewComboBoxColumn();
-            cmb.HeaderText = "Select Data";
-            cmb.Name = "cmb";
-            cmb.MaxDropDownItems = 4;
-            cmb.Items.Add("True");
-            cmb.Items.Add("False");
-            alleMitgliederDataGridView.Columns.Add(cmb);
+            alleMitgliederDataGridView.Rows.Clear();
+            (alleMitgliederDataGridView.Columns[4] as DataGridViewComboBoxColumn).DataSource = rollen;
+            (alleMitgliederDataGridView.Columns[3] as DataGridViewTextBoxColumn).MinimumWidth = 250;
+            foreach (Student info in gruppe.studenten)
+            {
+                int number = alleMitgliederDataGridView.Rows.Add();
+                alleMitgliederDataGridView.Rows[number].Cells[0].Value = info.name;
+                alleMitgliederDataGridView.Rows[number].Cells[1].Value = info.vorname;
+                alleMitgliederDataGridView.Rows[number].Cells[2].Value = info.sNummer;
+                if (info.sNummer != "na") alleMitgliederDataGridView.Rows[number].Cells[2].ReadOnly = true;
+                alleMitgliederDataGridView.Rows[number].Cells[3].Value = info.mail;
+                alleMitgliederDataGridView.Rows[number].Cells[4].Value = info.rolle;
+            }
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -110,26 +131,32 @@ namespace ClickDummyStudent
 
         private void saveGruppeInDatabase()
         {
+            for (int i = 0; i < alleMitgliederDataGridView.Rows.Count; i++)
+            {
+                string name = (string)alleMitgliederDataGridView.Rows[i].Cells[0].Value;
+                string vorname = (string)alleMitgliederDataGridView.Rows[i].Cells[1].Value;
+                string sNummer = (string)alleMitgliederDataGridView.Rows[i].Cells[2].Value;
+                string mail = (string)alleMitgliederDataGridView.Rows[i].Cells[3].Value;
+                string rolle = (string)alleMitgliederDataGridView.Rows[i].Cells[4].FormattedValue.ToString();
+
+                if (sNummer != "na" && sNummer != "" && sNummer != null)
+                {
+                    if (checkSNummer(sNummer))
+                    {
+                        insertStudent(new Student(name, vorname, sNummer, mail, rolle), gruppe);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Student " + name + " " + vorname + " hat weder 'na' noch eine gültige S-Nummer eingetragen und wurde nicht hinzugefügt. (" + sNummer + ")");
+                    }
+                    
+                }
+            }
             Database db = new Database();
             string query = "insert into Gruppe values(\"" + gruppe.gruppenKennung + "\"," + gruppe.themenNummer + ",\"" + gruppe.password + "\")";
             db.ExecuteQuery(query);
             query = "insert into Zuordnung_GruppeBeleg values(\"" + gruppe.gruppenKennung + "\",\"" + gruppe.Belegkennung + "\")";
             db.ExecuteQuery(query);
-
-            foreach (Student info in gruppe.studenten)
-            {
-                if (info.sNummer != "na")
-                {
-                    if (checkSNummer(info.sNummer))
-                    {
-                        insertStudent(info, gruppe);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Student " + info.name + " " + info.vorname + " hat weder 'na' noch eine gültige S-Nummer eingetragen und wurde nicht hinzugefügt" + info.sNummer + ".");
-                    }
-                }
-            }
         }
 
         private void insertStudent(Student student, Gruppe gruppe)
