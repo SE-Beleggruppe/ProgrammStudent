@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace ClickDummyStudent
 {
@@ -14,17 +15,41 @@ namespace ClickDummyStudent
     {
         Gruppe gruppe;
         List<string> rollen = new List<string>();
+        int minAnzahl;
         int maxAnzahl;
         public MainForm(string gruppenKennung, string belegkennung)
         {
             InitializeComponent();
+
+            minAnzahl = getMinAnzahlMitglieder(belegkennung);
+            maxAnzahl = getMaxAnzahlMitglieder(belegkennung);
+
             this.gruppe = getGruppeFromKennungS(gruppenKennung, belegkennung);
             this.gruppe.Belegkennung = belegkennung;
-            maxAnzahl = getMaxAnzahlMitglieder(belegkennung);
+
+            mitgliederDataGridView.AllowUserToAddRows = false;
+            mitgliederDataGridView.UserDeletingRow += mitgliederDataGridView_UserDeletingRow;
+
+
             updateRollen();
-            updateMitgliederData();
+            updateMitgliederData(null);
             updateThemen();
         }
+
+        void mitgliederDataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            DataGridViewRow rowToDelete = e.Row;
+            string sNummerToDelete = (string)rowToDelete.Cells[2].Value;
+            if (sNummerToDelete == "na") e.Cancel = true;
+
+            Database db = new Database();
+            db.ExecuteQuery("delete from Student where sNummer=\"" + sNummerToDelete + "\"");
+            db.ExecuteQuery("delete from Zuordnung_GruppeStudent where sNummer=\"" + sNummerToDelete + "\"");
+
+            gruppe = getGruppeFromKennungS(gruppe.gruppenKennung, gruppe.Belegkennung);
+            updateMitgliederData(null);
+        }
+
 
 
         private Gruppe getGruppeFromKennungS(string kennung, string belegkennung)
@@ -34,15 +59,15 @@ namespace ClickDummyStudent
             {
                 Gruppe neu = new Gruppe(info[0], Convert.ToInt32(info[1]), info[2]);
                 neu.Belegkennung = belegkennung;
+                neu.studenten = null;
                 foreach (string[] info2 in db.ExecuteQuery("select * from Student where sNummer in (select sNummer from Zuordnung_GruppeStudent where Gruppenkennung=\"" + kennung + "\")"))
                 {
                     neu.addStudent(new Student(info2[2], info2[1], info2[0], info2[3], info2[4]));
                 }
-                int minAnz = getMinAnzahlMitglieder(neu.Belegkennung);
                 int studentenCount = neu.studenten.Count;
-                if(neu.studenten.Count < minAnz)
+                if(neu.studenten.Count < maxAnzahl)
                 {
-                    for (int i = 0; i < minAnz - studentenCount; i++)
+                    for (int i = 0; i < maxAnzahl - studentenCount; i++)
                         neu.addStudent(new Student("na", "na", "na", "na", "na"));
                 }
                 return neu;
@@ -50,7 +75,7 @@ namespace ClickDummyStudent
             return null;
         }
 
-        private void updateMitgliederData()
+        private void updateMitgliederData(List<Student> errorStudenten)
         {
             mitgliederDataGridView.Rows.Clear();
             (mitgliederDataGridView.Columns[4] as DataGridViewComboBoxColumn).DataSource = rollen;
@@ -65,6 +90,23 @@ namespace ClickDummyStudent
                 if (info.sNummer != "na") mitgliederDataGridView.Rows[number].Cells[2].ReadOnly = true;
                 mitgliederDataGridView.Rows[number].Cells[3].Value = info.mail;
                 mitgliederDataGridView.Rows[number].Cells[4].Value = info.rolle;
+
+                if (info.sNummer == "na" && number < minAnzahl) 
+                    mitgliederDataGridView.Rows[number].DefaultCellStyle.BackColor = Color.Yellow;
+            }
+            if (errorStudenten != null)
+            {
+                foreach (Student info in errorStudenten)
+                {
+                    int number = mitgliederDataGridView.Rows.Add();
+                    mitgliederDataGridView.Rows[number].Cells[0].Value = info.name;
+                    mitgliederDataGridView.Rows[number].Cells[1].Value = info.vorname;
+                    mitgliederDataGridView.Rows[number].Cells[2].Value = info.sNummer;
+                    mitgliederDataGridView.Rows[number].Cells[3].Value = info.mail;
+                    mitgliederDataGridView.Rows[number].Cells[4].Value = info.rolle;
+
+                    mitgliederDataGridView.Rows[number].DefaultCellStyle.BackColor = Color.Red;
+                }
             }
         }
 
@@ -116,6 +158,7 @@ namespace ClickDummyStudent
 
         private void saveButton_Click(object sender, EventArgs e)
         {
+            List<Student> error = new List<Student>();
             for (int i = 0; i < mitgliederDataGridView.Rows.Count; i++)
             {
                 string name = (string)mitgliederDataGridView.Rows[i].Cells[0].Value;
@@ -126,8 +169,26 @@ namespace ClickDummyStudent
 
                 if (sNummer != "na" && sNummer != "" && sNummer != null)
                 {
-                    if (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly) updateStudent(new Student(name, vorname, sNummer, mail, rolle));
-                    else insertStudent(new Student(name, vorname, sNummer, mail, rolle), gruppe);
+                    Student student = new Student(name, vorname, sNummer, mail, rolle);
+                    if (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly || checkSNummer(sNummer))
+                    {
+                        if (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly || checkMail(mail))
+                        {
+                            if (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly) updateStudent(student);
+                            else insertStudent(student, gruppe);
+                        }
+                        else
+                        {
+                            // MAIL IST NICHT RICHTIG
+                            error.Add(student);
+                        }
+                    }
+                    else
+                    {
+                        // S-Nummer ist falsch
+                        error.Add(student);
+                    }
+                    
                 }
             }
             int themennummer = getThemenNummerFromThema((string)comboBoxThemen.SelectedItem);
@@ -138,7 +199,7 @@ namespace ClickDummyStudent
             this.gruppe = getGruppeFromKennungS(gruppe.gruppenKennung, gruppe.Belegkennung);
             this.gruppe.Belegkennung = gruppe.Belegkennung;
             updateRollen();
-            updateMitgliederData();
+            updateMitgliederData(error);
             updateThemen();
 
             MessageBox.Show("Änderungen erfolgreich gespeichert!");
@@ -164,6 +225,37 @@ namespace ClickDummyStudent
         {
             Database db = new Database();
             return Convert.ToInt32(db.ExecuteQuery("select Themennummer from Thema where Aufgabe=\"" + thema + "\"").First()[0]);
+        }
+
+        private bool checkSNummer(string sNummer)
+        {
+            Database db = new Database();
+            if (sNummer == "") return false;
+            if (sNummer.Length != 6) return false;
+            if (!sNummer.StartsWith("s")) return false;
+            string nummer = sNummer.Substring(1);
+            int n;
+            bool isNummer = int.TryParse(nummer, out n);
+            if (!isNummer) return false;
+
+            List<string[]> output = db.ExecuteQuery("select * from Student");
+            foreach (string[] info in output)
+            {
+                if (info[0] == sNummer) return false;
+            }
+
+            return true;
+        }
+
+        private bool checkMail(string mail)
+        {
+            Regex regExp = new Regex("\\b[!#$%&'*+./0-9=?_`a-z{|}~^-]+@[.0-9a-z-]+\\.[a-z]{2,6}\\b");
+            Match match = regExp.Match(mail);
+            if (match.Success)
+            {
+                return true;
+            }
+            else return false;
         }
     }
 }

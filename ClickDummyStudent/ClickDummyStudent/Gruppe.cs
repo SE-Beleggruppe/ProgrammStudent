@@ -31,6 +31,7 @@ namespace ClickDummyStudent
 
         public void addStudent(Student student)
         {
+            if (this.studenten == null) this.studenten = new List<Student>();
             if(student != null) this.studenten.Add(student);
         }
     }
