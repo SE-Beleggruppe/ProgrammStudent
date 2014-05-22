@@ -172,8 +172,31 @@ namespace ClickDummyStudent
             Application.Exit();
         }
 
+        private bool checkIfLeiterIsThere()
+        {
+            for (int i = 0; i < mitgliederDataGridView.Rows.Count; i++)
+            {
+                string name = (string)mitgliederDataGridView.Rows[i].Cells[0].Value;
+                string vorname = (string)mitgliederDataGridView.Rows[i].Cells[1].Value;
+                string sNummer = (string)mitgliederDataGridView.Rows[i].Cells[2].Value;
+                string mail = (string)mitgliederDataGridView.Rows[i].Cells[3].Value;
+                string rolle = (string)mitgliederDataGridView.Rows[i].Cells[4].FormattedValue.ToString();
+
+                if (rolle == "Leitung" && sNummer != "na" && (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly || checkSNummer(sNummer)) && (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly || checkMail(mail)))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void saveButton_Click(object sender, EventArgs e)
         {
+            if(!checkIfLeiterIsThere())
+            {
+                MessageBox.Show("Es muss mindestens ein Gruppenmitglied der Leiter sein. (Falsche S-Nummern oder ungültige Mail-Adressen sind nicht erlaubt)");
+                return;
+            }
             List<Student> error = new List<Student>();
             for (int i = 0; i < mitgliederDataGridView.Rows.Count; i++)
             {
