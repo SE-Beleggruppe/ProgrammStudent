@@ -115,7 +115,7 @@ namespace ClickDummyStudent
         {
             Database db = new Database();
             DateTime anfang = Convert.ToDateTime(db.ExecuteQuery("select StartDatum from Beleg where Belegkennung=\"" + belegkennung + "\"").First()[0]);
-            DateTime ende = Convert.ToDateTime(db.ExecuteQuery("select StartDatum from Beleg where Belegkennung=\"" + belegkennung + "\"").First()[0]);
+            DateTime ende = Convert.ToDateTime(db.ExecuteQuery("select EndDatum from Beleg where Belegkennung=\"" + belegkennung + "\"").First()[0]);
             if (DateTime.Today < anfang || DateTime.Today > ende) return false;
             return true;
         }
