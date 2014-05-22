@@ -45,7 +45,7 @@ namespace ClickDummyStudent
                 Student leiter = new Student(nachnameTextField.Text, vornameTextField.Text, sNummerTextField.Text, mailTextField.Text, "Leitung");
                 FormMitgliederNeuEingeben form2 = new FormMitgliederNeuEingeben(leiter, this.Belegkennung);
                 form2.Show();
-                this.Close();
+                this.Hide();
             }
             else
             {
@@ -86,15 +86,15 @@ namespace ClickDummyStudent
             Match match = regExp.Match(mail);
             if (match.Success)
             {
-                Database db = new Database();
-                List<string[]> output = db.ExecuteQuery("select * from Student");
-                foreach (string[] info in output)
-                {
-                    if(info[3] == mail) return false;
-                }
                 return true;
             }
             else return false;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            Application.Exit();
         }
     }
 }

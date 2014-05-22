@@ -52,6 +52,7 @@ namespace ClickDummyStudent
             MessageBox.Show("Anmeldung abgeschlossen! \nIhre Gruppenkennung lautet: " + gruppe.gruppenKennung + "\n(Wichtig für das spätere Anmelden!)");
             MainForm form = new MainForm(gruppe.gruppenKennung, gruppe.Belegkennung);
             form.Show();
+            this.Hide();
         }
 
         private void updateRollen()

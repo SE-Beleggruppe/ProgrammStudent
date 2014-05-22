@@ -21,6 +21,13 @@ namespace ClickDummyStudent
         {
             InitializeComponent();
 
+            if (!isInBelegZeitraum(belegkennung))
+            {
+                mitgliederDataGridView.ReadOnly = true;
+                comboBoxThemen.Enabled = false;
+                saveButton.Enabled = false;
+            }
+
             minAnzahl = getMinAnzahlMitglieder(belegkennung);
             maxAnzahl = getMaxAnzahlMitglieder(belegkennung);
 
@@ -73,6 +80,15 @@ namespace ClickDummyStudent
                 return neu;
             }
             return null;
+        }
+
+        private bool isInBelegZeitraum(string belegkennung)
+        {
+            Database db = new Database();
+            DateTime anfang = Convert.ToDateTime(db.ExecuteQuery("select StartDatum from Beleg where Belegkennung=\"" + belegkennung + "\"").First()[0]);
+            DateTime ende = Convert.ToDateTime(db.ExecuteQuery("select StartDatum from Beleg where Belegkennung=\"" + belegkennung + "\"").First()[0]);
+            if (DateTime.Today < anfang || DateTime.Today > ende) return false;
+            return true;
         }
 
         private void updateMitgliederData(List<Student> errorStudenten)

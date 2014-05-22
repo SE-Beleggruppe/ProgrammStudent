@@ -35,6 +35,11 @@ namespace ClickDummyStudent
                     {
                         if (freieGruppen(loginTextField.Text))
                         {
+                            if (!isInBelegZeitraum(loginTextField.Text))
+                            {
+                                MessageBox.Show("Der Anmeldezeitraum für diesen Beleg ist leider abgelaufen. Bitte melden Sie sich beim Dozenten.");
+                                return;
+                            }
                             FormLeiterNeuEingeben leiterEingeben = new FormLeiterNeuEingeben(loginTextField.Text);
                             leiterEingeben.Show();
                             Hide();
@@ -104,6 +109,15 @@ namespace ClickDummyStudent
             foreach (string[] info in output)
                 return info[0];
             return null;
+        }
+
+        private bool isInBelegZeitraum(string belegkennung)
+        {
+            Database db = new Database();
+            DateTime anfang = Convert.ToDateTime(db.ExecuteQuery("select StartDatum from Beleg where Belegkennung=\"" + belegkennung + "\"").First()[0]);
+            DateTime ende = Convert.ToDateTime(db.ExecuteQuery("select StartDatum from Beleg where Belegkennung=\"" + belegkennung + "\"").First()[0]);
+            if (DateTime.Today < anfang || DateTime.Today > ende) return false;
+            return true;
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
