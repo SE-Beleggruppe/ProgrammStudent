@@ -22,14 +22,14 @@ namespace ClickDummyStudent
             gruppe = new Gruppe("p", Belegkennung);
             string newGruppenkennung = getGruppenKennung();
 
-            if (newGruppenkennung != "-1") gruppe.gruppenKennung = newGruppenkennung;
+            if (newGruppenkennung != "-1") gruppe.GruppenKennung = newGruppenkennung;
             else
             {
                 MessageBox.Show("Keine freien Gruppen für diesen Beleg verfügbar, bitte bei dem Dozenten melden");
                 Application.Exit();
             }
 
-            gruppe.themenNummer = getThemenNummer();
+            gruppe.ThemenNummer = getThemenNummer();
             gruppe.addStudent(leiter);
             for (int i = 0; i < getMinAnzahlMitglieder() - 1; i++)
             {
@@ -47,10 +47,10 @@ namespace ClickDummyStudent
                 MessageBox.Show("Bitte geben Sie ein Passwort ein, mit dem SIe später auf die Gruppe zugreifen können.");
                 return;
             }
-            gruppe.password = newPasswortTextBox.Text;
+            gruppe.Password = newPasswortTextBox.Text;
             saveGruppeInDatabase();
-            MessageBox.Show("Anmeldung abgeschlossen! \nIhre Gruppenkennung lautet: " + gruppe.gruppenKennung + "\n(Wichtig für das spätere Anmelden!)");
-            MainForm form = new MainForm(gruppe.gruppenKennung, gruppe.Belegkennung);
+            MessageBox.Show("Anmeldung abgeschlossen! \nIhre Gruppenkennung lautet: " + gruppe.GruppenKennung + "\n(Wichtig für das spätere Anmelden!)");
+            MainForm form = new MainForm(gruppe.GruppenKennung, gruppe.Belegkennung);
             form.Show();
             this.Hide();
         }
@@ -72,15 +72,15 @@ namespace ClickDummyStudent
             alleMitgliederDataGridView.Rows.Clear();
             (alleMitgliederDataGridView.Columns[4] as DataGridViewComboBoxColumn).DataSource = rollen;
             (alleMitgliederDataGridView.Columns[3] as DataGridViewTextBoxColumn).MinimumWidth = 250;
-            foreach (Student info in gruppe.studenten)
+            foreach (Student info in gruppe.Studenten)
             {
                 int number = alleMitgliederDataGridView.Rows.Add();
-                alleMitgliederDataGridView.Rows[number].Cells[0].Value = info.name;
-                alleMitgliederDataGridView.Rows[number].Cells[1].Value = info.vorname;
-                alleMitgliederDataGridView.Rows[number].Cells[2].Value = info.sNummer;
-                if (info.sNummer != "na") alleMitgliederDataGridView.Rows[number].Cells[2].ReadOnly = true;
-                alleMitgliederDataGridView.Rows[number].Cells[3].Value = info.mail;
-                alleMitgliederDataGridView.Rows[number].Cells[4].Value = info.rolle;
+                alleMitgliederDataGridView.Rows[number].Cells[0].Value = info.Name;
+                alleMitgliederDataGridView.Rows[number].Cells[1].Value = info.Vorname;
+                alleMitgliederDataGridView.Rows[number].Cells[2].Value = info.SNummer;
+                if (info.SNummer != "na") alleMitgliederDataGridView.Rows[number].Cells[2].ReadOnly = true;
+                alleMitgliederDataGridView.Rows[number].Cells[3].Value = info.Mail;
+                alleMitgliederDataGridView.Rows[number].Cells[4].Value = info.Rolle;
             }
         }
 
@@ -154,18 +154,18 @@ namespace ClickDummyStudent
                 }
             }
             Database db = new Database();
-            string query = "insert into Gruppe values(\"" + gruppe.gruppenKennung + "\"," + gruppe.themenNummer + ",\"" + gruppe.password + "\")";
+            string query = "insert into Gruppe values(\"" + gruppe.GruppenKennung + "\"," + gruppe.ThemenNummer + ",\"" + gruppe.Password + "\")";
             db.ExecuteQuery(query);
-            query = "insert into Zuordnung_GruppeBeleg values(\"" + gruppe.gruppenKennung + "\",\"" + gruppe.Belegkennung + "\")";
+            query = "insert into Zuordnung_GruppeBeleg values(\"" + gruppe.GruppenKennung + "\",\"" + gruppe.Belegkennung + "\")";
             db.ExecuteQuery(query);
         }
 
         private void insertStudent(Student student, Gruppe gruppe)
         {
             Database db = new Database();
-            string query = "insert into Student values(\"" + student.sNummer + "\",\"" + student.vorname + "\",\"" + student.name + "\",\"" + student.mail + "\",\"" + student.rolle + "\")";
+            string query = "insert into Student values(\"" + student.SNummer + "\",\"" + student.Vorname + "\",\"" + student.Name + "\",\"" + student.Mail + "\",\"" + student.Rolle + "\")";
             db.ExecuteQuery(query);
-            query = "insert into Zuordnung_GruppeStudent values(\"" + gruppe.gruppenKennung + "\",\"" + student.sNummer + "\")";
+            query = "insert into Zuordnung_GruppeStudent values(\"" + gruppe.GruppenKennung + "\",\"" + student.SNummer + "\")";
             db.ExecuteQuery(query);
         }
 

@@ -10,14 +10,14 @@ namespace ClickDummyStudent
 
     class Database
     {
-        public string connectionString = "Data Source=141.56.20.2;Port=5200;" +
+        public string ConnectionString = "Data Source=141.56.20.2;Port=5200;" +
                                     "UID=case04;PWD=itcyisay;" +
                                     "Database=case04;";
 
         AseConnection conn;
         public Database()
         {
-            conn = new AseConnection(connectionString);
+            conn = new AseConnection(ConnectionString);
         }
 
         public void Connect()

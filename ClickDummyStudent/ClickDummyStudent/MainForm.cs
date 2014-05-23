@@ -31,16 +31,16 @@ namespace ClickDummyStudent
             minAnzahl = getMinAnzahlMitglieder(belegkennung);
             maxAnzahl = getMaxAnzahlMitglieder(belegkennung);
 
-            this.gruppe = getGruppeFromKennungS(gruppenKennung, belegkennung);
+            this.gruppe = GetGruppeFromKennungS(gruppenKennung, belegkennung);
             this.gruppe.Belegkennung = belegkennung;
 
             mitgliederDataGridView.AllowUserToAddRows = false;
             mitgliederDataGridView.UserDeletingRow += mitgliederDataGridView_UserDeletingRow;
 
 
-            updateRollen();
+            UpdateRollen();
             updateMitgliederData(null);
-            updateThemen();
+            UpdateThemen();
         }
 
         void mitgliederDataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
@@ -53,29 +53,32 @@ namespace ClickDummyStudent
             db.ExecuteQuery("delete from Student where sNummer=\"" + sNummerToDelete + "\"");
             db.ExecuteQuery("delete from Zuordnung_GruppeStudent where sNummer=\"" + sNummerToDelete + "\"");
 
-            gruppe = getGruppeFromKennungS(gruppe.gruppenKennung, gruppe.Belegkennung);
+            gruppe = GetGruppeFromKennungS(gruppe.GruppenKennung, gruppe.Belegkennung);
             updateMitgliederData(null);
         }
 
 
 
-        private Gruppe getGruppeFromKennungS(string kennung, string belegkennung)
+        private Gruppe GetGruppeFromKennungS(string kennung, string belegkennung)
         {
             Database db = new Database();
             foreach (string[] info in db.ExecuteQuery("select * from Gruppe where Gruppenkennung=\"" + kennung + "\""))
             {
                 Gruppe neu = new Gruppe(info[0], Convert.ToInt32(info[1]), info[2]);
                 neu.Belegkennung = belegkennung;
-                neu.studenten = null;
+                neu.Studenten = null;
                 foreach (string[] info2 in db.ExecuteQuery("select * from Student where sNummer in (select sNummer from Zuordnung_GruppeStudent where Gruppenkennung=\"" + kennung + "\")"))
                 {
                     neu.addStudent(new Student(info2[2], info2[1], info2[0], info2[3], info2[4]));
                 }
-                int studentenCount = neu.studenten.Count;
-                if(neu.studenten.Count < maxAnzahl)
+                if (neu.Studenten != null)
                 {
-                    for (int i = 0; i < maxAnzahl - studentenCount; i++)
-                        neu.addStudent(new Student("na", "na", "na", "na", "na"));
+                    int studentenCount = neu.Studenten.Count;
+                    if(neu.Studenten.Count < maxAnzahl)
+                    {
+                        for (int i = 0; i < maxAnzahl - studentenCount; i++)
+                            neu.addStudent(new Student("na", "na", "na", "na", "na"));
+                    }
                 }
                 return neu;
             }
@@ -97,17 +100,17 @@ namespace ClickDummyStudent
             (mitgliederDataGridView.Columns[4] as DataGridViewComboBoxColumn).DataSource = rollen;
             (mitgliederDataGridView.Columns[4] as DataGridViewComboBoxColumn).MinimumWidth = 150;
             (mitgliederDataGridView.Columns[3] as DataGridViewTextBoxColumn).MinimumWidth = 250;
-            foreach (Student info in gruppe.studenten)
+            foreach (Student info in gruppe.Studenten)
             {
                 int number = mitgliederDataGridView.Rows.Add();
-                mitgliederDataGridView.Rows[number].Cells[0].Value = info.name;
-                mitgliederDataGridView.Rows[number].Cells[1].Value = info.vorname;
-                mitgliederDataGridView.Rows[number].Cells[2].Value = info.sNummer;
-                if (info.sNummer != "na") mitgliederDataGridView.Rows[number].Cells[2].ReadOnly = true;
-                mitgliederDataGridView.Rows[number].Cells[3].Value = info.mail;
-                mitgliederDataGridView.Rows[number].Cells[4].Value = info.rolle;
+                mitgliederDataGridView.Rows[number].Cells[0].Value = info.Name;
+                mitgliederDataGridView.Rows[number].Cells[1].Value = info.Vorname;
+                mitgliederDataGridView.Rows[number].Cells[2].Value = info.SNummer;
+                if (info.SNummer != "na") mitgliederDataGridView.Rows[number].Cells[2].ReadOnly = true;
+                mitgliederDataGridView.Rows[number].Cells[3].Value = info.Mail;
+                mitgliederDataGridView.Rows[number].Cells[4].Value = info.Rolle;
 
-                if (info.sNummer == "na" && number < minAnzahl) 
+                if (info.SNummer == "na" && number < minAnzahl) 
                     mitgliederDataGridView.Rows[number].DefaultCellStyle.BackColor = Color.Yellow;
             }
             if (errorStudenten != null)
@@ -115,18 +118,18 @@ namespace ClickDummyStudent
                 foreach (Student info in errorStudenten)
                 {
                     int number = mitgliederDataGridView.Rows.Add();
-                    mitgliederDataGridView.Rows[number].Cells[0].Value = info.name;
-                    mitgliederDataGridView.Rows[number].Cells[1].Value = info.vorname;
-                    mitgliederDataGridView.Rows[number].Cells[2].Value = info.sNummer;
-                    mitgliederDataGridView.Rows[number].Cells[3].Value = info.mail;
-                    mitgliederDataGridView.Rows[number].Cells[4].Value = info.rolle;
+                    mitgliederDataGridView.Rows[number].Cells[0].Value = info.Name;
+                    mitgliederDataGridView.Rows[number].Cells[1].Value = info.Vorname;
+                    mitgliederDataGridView.Rows[number].Cells[2].Value = info.SNummer;
+                    mitgliederDataGridView.Rows[number].Cells[3].Value = info.Mail;
+                    mitgliederDataGridView.Rows[number].Cells[4].Value = info.Rolle;
 
                     mitgliederDataGridView.Rows[number].DefaultCellStyle.BackColor = Color.Red;
                 }
             }
         }
 
-        private void updateThemen()
+        private void UpdateThemen()
         {
             Database db = new Database();
             List<string> erg = new List<string>();
@@ -137,10 +140,10 @@ namespace ClickDummyStudent
             }
             comboBoxThemen.DataSource = erg;
 
-            comboBoxThemen.SelectedItem = db.ExecuteQuery("select Aufgabe from Thema where Themennummer in (select Themennummer from Gruppe where Gruppenkennung=\"" + gruppe.gruppenKennung + "\")").First()[0];
+            comboBoxThemen.SelectedItem = db.ExecuteQuery("select Aufgabe from Thema where Themennummer in (select Themennummer from Gruppe where Gruppenkennung=\"" + gruppe.GruppenKennung + "\")").First()[0];
         }
 
-        private void updateRollen()
+        private void UpdateRollen()
         {
             rollen = new List<string>();
             Database db = new Database();
@@ -172,7 +175,7 @@ namespace ClickDummyStudent
             Application.Exit();
         }
 
-        private bool checkIfLeiterIsThere()
+        private bool CheckIfLeiterIsThere()
         {
             for (int i = 0; i < mitgliederDataGridView.Rows.Count; i++)
             {
@@ -180,11 +183,15 @@ namespace ClickDummyStudent
                 string vorname = (string)mitgliederDataGridView.Rows[i].Cells[1].Value;
                 string sNummer = (string)mitgliederDataGridView.Rows[i].Cells[2].Value;
                 string mail = (string)mitgliederDataGridView.Rows[i].Cells[3].Value;
-                string rolle = (string)mitgliederDataGridView.Rows[i].Cells[4].FormattedValue.ToString();
-
-                if (rolle == "Leitung" && sNummer != "na" && (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly || checkSNummer(sNummer)) && (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly || checkMail(mail)))
+                var formattedValue = mitgliederDataGridView.Rows[i].Cells[4].FormattedValue;
+                if (formattedValue != null)
                 {
-                    return true;
+                    string rolle = (string)formattedValue.ToString();
+
+                    if (rolle == "Leitung" && sNummer != "na" && (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly || checkSNummer(sNummer)) && (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly || checkMail(mail)))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -192,7 +199,7 @@ namespace ClickDummyStudent
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            if(!checkIfLeiterIsThere())
+            if(!CheckIfLeiterIsThere())
             {
                 MessageBox.Show("Es muss mindestens ein Gruppenmitglied der Leiter sein. (Falsche S-Nummern oder ungültige Mail-Adressen sind nicht erlaubt)");
                 return;
@@ -206,7 +213,7 @@ namespace ClickDummyStudent
                 string mail = (string) mitgliederDataGridView.Rows[i].Cells[3].Value;
                 string rolle = (string)mitgliederDataGridView.Rows[i].Cells[4].FormattedValue.ToString();
 
-                if (sNummer != "na" && sNummer != "" && sNummer != null)
+                if (sNummer != "na" && !string.IsNullOrEmpty(sNummer))
                 {
                     Student student = new Student(name, vorname, sNummer, mail, rolle);
                     if (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly || checkSNummer(sNummer))
@@ -232,14 +239,14 @@ namespace ClickDummyStudent
             }
             int themennummer = getThemenNummerFromThema((string)comboBoxThemen.SelectedItem);
             Database db = new Database();
-            db.ExecuteQuery("update Gruppe set Themennummer=" + themennummer + " where Gruppenkennung=\"" + gruppe.gruppenKennung + "\"");
+            db.ExecuteQuery("update Gruppe set Themennummer=" + themennummer + " where Gruppenkennung=\"" + gruppe.GruppenKennung + "\"");
 
 
-            this.gruppe = getGruppeFromKennungS(gruppe.gruppenKennung, gruppe.Belegkennung);
+            this.gruppe = GetGruppeFromKennungS(gruppe.GruppenKennung, gruppe.Belegkennung);
             this.gruppe.Belegkennung = gruppe.Belegkennung;
-            updateRollen();
+            UpdateRollen();
             updateMitgliederData(error);
-            updateThemen();
+            UpdateThemen();
 
             MessageBox.Show("Änderungen erfolgreich gespeichert!");
         }
@@ -247,16 +254,16 @@ namespace ClickDummyStudent
         private void updateStudent(Student student)
         {
             Database db = new Database();
-            string query = "update Student set Nachname=\"" + student.name + "\", Vorname=\"" + student.vorname + "\", Mail=\"" + student.mail + "\", Rolle=\"" + student.rolle + "\" where sNummer=\"" + student.sNummer + "\"";
+            string query = "update Student set Nachname=\"" + student.Name + "\", Vorname=\"" + student.Vorname + "\", Mail=\"" + student.Mail + "\", Rolle=\"" + student.Rolle + "\" where sNummer=\"" + student.SNummer + "\"";
             db.ExecuteQuery(query);
         }
 
         private void insertStudent(Student student, Gruppe gruppe)
         {
             Database db = new Database();
-            string query = "insert into Student values(\"" + student.sNummer + "\",\"" + student.vorname + "\",\"" + student.name + "\",\"" + student.mail + "\",\"" + student.rolle + "\")";
+            string query = "insert into Student values(\"" + student.SNummer + "\",\"" + student.Vorname + "\",\"" + student.Name + "\",\"" + student.Mail + "\",\"" + student.Rolle + "\")";
             db.ExecuteQuery(query);
-            query = "insert into Zuordnung_GruppeStudent values(\"" + gruppe.gruppenKennung + "\",\"" + student.sNummer + "\")";
+            query = "insert into Zuordnung_GruppeStudent values(\"" + gruppe.GruppenKennung + "\",\"" + student.SNummer + "\")";
             db.ExecuteQuery(query);
         }
 

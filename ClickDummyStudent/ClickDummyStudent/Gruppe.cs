@@ -8,31 +8,31 @@ namespace ClickDummyStudent
 {
     public class Gruppe
     {
-        public string gruppenKennung { get; set; }
-        public List<Student> studenten { get; set; }
-        public int themenNummer { get; set; }
-        public string password { get; set; }
+        public string GruppenKennung { get; set; }
+        public List<Student> Studenten { get; set; }
+        public int ThemenNummer { get; set; }
+        public string Password { get; set; }
         public string Belegkennung { get; set; }
 
         public Gruppe(string password, string belegkennung)
         {
-            this.password = password;
+            this.Password = password;
             this.Belegkennung = belegkennung;
-            this.studenten = new List<Student>();
+            this.Studenten = new List<Student>();
         }
 
         public Gruppe(string kennung, int themennummer, string password)
         {
-            this.gruppenKennung = kennung;
-            this.themenNummer = themenNummer;
-            this.password = password;
-            this.studenten = new List<Student>();
+            this.GruppenKennung = kennung;
+            this.ThemenNummer = ThemenNummer;
+            this.Password = password;
+            this.Studenten = new List<Student>();
         }
 
         public void addStudent(Student student)
         {
-            if (this.studenten == null) this.studenten = new List<Student>();
-            if(student != null) this.studenten.Add(student);
+            if (this.Studenten == null) this.Studenten = new List<Student>();
+            if(student != null) this.Studenten.Add(student);
         }
     }
 }

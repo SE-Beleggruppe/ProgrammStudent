@@ -8,19 +8,19 @@ namespace ClickDummyStudent
 {
     public class Student
     {
-        public string name { get; set; }
-        public string vorname { get; set; }
-        public string sNummer { get; set; }
-        public string mail { get; set; }
-        public string rolle { get; set; }
+        public string Name { get; set; }
+        public string Vorname { get; set; }
+        public string SNummer { get; set; }
+        public string Mail { get; set; }
+        public string Rolle { get; set; }
 
         public Student(string name, string vorname, string sNummer, string mail, string rolle)
         {
-            this.name = name;
-            this.vorname = vorname;
-            this.sNummer = sNummer;
-            this.mail = mail;
-            this.rolle = rolle;
+            this.Name = name;
+            this.Vorname = vorname;
+            this.SNummer = sNummer;
+            this.Mail = mail;
+            this.Rolle = rolle;
         }
     }
 }
