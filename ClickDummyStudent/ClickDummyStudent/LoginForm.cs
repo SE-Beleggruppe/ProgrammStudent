@@ -18,6 +18,7 @@ namespace ClickDummyStudent
         {
             InitializeComponent();
             this.Text = "Bitte loggen Sie sich ein";
+            this.StartPosition = FormStartPosition.CenterScreen;
         }
 
         private void LoginButton_Click(object sender, EventArgs e)

@@ -17,11 +17,10 @@ namespace ClickDummyStudent
         public FormLeiterNeuEingeben( string belegKennung)
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            this.Text = "Bitte tragen Sie den Leiter der Gruppe ein";
             this.Belegkennung = belegKennung;
-            sNummerTextField.Text = "s12345";
-            nachnameTextField.Text = "Test";
-            vornameTextField.Text = "Test";
-            mailTextField.Text = "mail@test.de";
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.mitgliederDataGridView = new System.Windows.Forms.DataGridView();
-            this.saveButton = new System.Windows.Forms.Button();
-            this.comboBoxThemen = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.Nachname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Vorname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sNummer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mail = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Rolle = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.saveButton = new System.Windows.Forms.Button();
+            this.comboBoxThemen = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.mitgliederDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,35 +51,8 @@
             this.Rolle});
             this.mitgliederDataGridView.Location = new System.Drawing.Point(12, 12);
             this.mitgliederDataGridView.Name = "mitgliederDataGridView";
-            this.mitgliederDataGridView.Size = new System.Drawing.Size(803, 215);
+            this.mitgliederDataGridView.Size = new System.Drawing.Size(743, 309);
             this.mitgliederDataGridView.TabIndex = 0;
-            // 
-            // saveButton
-            // 
-            this.saveButton.Location = new System.Drawing.Point(310, 235);
-            this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(71, 23);
-            this.saveButton.TabIndex = 2;
-            this.saveButton.Text = "Speichern";
-            this.saveButton.UseVisualStyleBackColor = true;
-            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
-            // 
-            // comboBoxThemen
-            // 
-            this.comboBoxThemen.FormattingEnabled = true;
-            this.comboBoxThemen.Location = new System.Drawing.Point(62, 235);
-            this.comboBoxThemen.Name = "comboBoxThemen";
-            this.comboBoxThemen.Size = new System.Drawing.Size(242, 21);
-            this.comboBoxThemen.TabIndex = 4;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 238);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 13);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Thema:";
             // 
             // Nachname
             // 
@@ -106,11 +79,39 @@
             this.Rolle.HeaderText = "Rolle";
             this.Rolle.Name = "Rolle";
             // 
+            // saveButton
+            // 
+            this.saveButton.Location = new System.Drawing.Point(309, 327);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(71, 23);
+            this.saveButton.TabIndex = 2;
+            this.saveButton.Text = "Speichern";
+            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            // 
+            // comboBoxThemen
+            // 
+            this.comboBoxThemen.FormattingEnabled = true;
+            this.comboBoxThemen.Location = new System.Drawing.Point(61, 327);
+            this.comboBoxThemen.Name = "comboBoxThemen";
+            this.comboBoxThemen.Size = new System.Drawing.Size(242, 21);
+            this.comboBoxThemen.TabIndex = 4;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 330);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(43, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Thema:";
+            // 
             // MainForm
             // 
+            this.AcceptButton = this.saveButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(827, 267);
+            this.ClientSize = new System.Drawing.Size(768, 366);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxThemen);
             this.Controls.Add(this.saveButton);

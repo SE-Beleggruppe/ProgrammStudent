@@ -20,6 +20,9 @@ namespace ClickDummyStudent
         public MainForm(string gruppenKennung, string belegkennung)
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            comboBoxThemen.DropDownStyle = ComboBoxStyle.DropDownList;
 
             if (!isInBelegZeitraum(belegkennung))
             {
@@ -222,6 +225,18 @@ namespace ClickDummyStudent
             }
 
             List<Student> error = new List<Student>();
+
+            for (int i = 0; i < mitgliederDataGridView.Rows.Count; i++)
+            {
+                string mail = (string) mitgliederDataGridView.Rows[i].Cells[3].Value;
+                if(mitgliederDataGridView.Rows[i].Cells[2].ReadOnly && !checkMail(mail))
+                {
+                    MessageBox.Show(mail + " ist keine gültige Mail-Adresse. Die Daten wurden nicht gespeichert.",
+                        "Fehler");
+                    return;
+                }
+            }
+
             for (int i = 0; i < mitgliederDataGridView.Rows.Count; i++)
             {
                 string name = (string)mitgliederDataGridView.Rows[i].Cells[0].Value;

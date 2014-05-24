@@ -18,6 +18,8 @@ namespace ClickDummyStudent
         public FormMitgliederNeuEingeben(Student leiter, string belegKennung)
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
+
             this.Text = "Neue Gruppe in Beleg " + belegKennung;
             this.Belegkennung = belegKennung;
             _gruppe = new Gruppe("p", Belegkennung);
