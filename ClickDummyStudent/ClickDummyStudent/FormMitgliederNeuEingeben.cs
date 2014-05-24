@@ -18,6 +18,7 @@ namespace ClickDummyStudent
         public FormMitgliederNeuEingeben(Student leiter, string belegKennung)
         {
             InitializeComponent();
+            this.Text = "Neue Gruppe in Beleg " + belegKennung;
             this.Belegkennung = belegKennung;
             _gruppe = new Gruppe("p", Belegkennung);
             string newGruppenkennung = getGruppenKennung();
@@ -25,7 +26,7 @@ namespace ClickDummyStudent
             if (newGruppenkennung != "-1") _gruppe.GruppenKennung = newGruppenkennung;
             else
             {
-                MessageBox.Show("Keine freien Gruppen für diesen Beleg verfügbar, bitte bei dem Dozenten melden");
+                MessageBox.Show("Keine freien Gruppen für diesen Beleg verfügbar, bitte bei dem Dozenten melden", "Fehler");
                 Application.Exit();
             }
 
@@ -44,15 +45,11 @@ namespace ClickDummyStudent
         {
             if (newPasswortTextBox.Text == "")
             {
-                MessageBox.Show("Bitte geben Sie ein Passwort ein, mit dem SIe später auf die Gruppe zugreifen können.");
+                MessageBox.Show("Bitte geben Sie ein Passwort ein, mit dem SIe später auf die Gruppe zugreifen können.", "Fehler");
                 return;
             }
             _gruppe.Password = newPasswortTextBox.Text;
             saveGruppeInDatabase();
-            MessageBox.Show("Anmeldung abgeschlossen! \nIhre Gruppenkennung lautet: " + _gruppe.GruppenKennung + "\n(Wichtig für das spätere Anmelden!)");
-            MainForm form = new MainForm(_gruppe.GruppenKennung, _gruppe.Belegkennung);
-            form.Show();
-            this.Hide();
         }
 
         private void updateRollen()
@@ -158,7 +155,7 @@ namespace ClickDummyStudent
             }
             if (fehlermeldung != "")
             {
-                MessageBox.Show(fehlermeldung);
+                MessageBox.Show(fehlermeldung, "Fehler");
                 return;
             }
             for (int i = 0; i < alleMitgliederDataGridView.Rows.Count; i++)
@@ -179,6 +176,12 @@ namespace ClickDummyStudent
             db.ExecuteQuery(query);
             query = "insert into Zuordnung_GruppeBeleg values(\"" + _gruppe.GruppenKennung + "\",\"" + _gruppe.Belegkennung + "\")";
             db.ExecuteQuery(query);
+
+
+            MessageBox.Show("Anmeldung abgeschlossen! \nIhre Gruppenkennung lautet: " + _gruppe.GruppenKennung + "\n(Wichtig für das spätere Anmelden!)", "ACHTUNG!!");
+            MainForm form = new MainForm(_gruppe.GruppenKennung, _gruppe.Belegkennung);
+            form.Show();
+            this.Hide();
         }
 
         private void insertStudent(Student student, Gruppe gruppe)

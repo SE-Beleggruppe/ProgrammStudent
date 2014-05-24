@@ -33,6 +33,8 @@ namespace ClickDummyStudent
 
             this._gruppe = GetGruppeFromKennungS(gruppenKennung, belegkennung);
 
+            this.Text = gruppenKennung;
+
             mitgliederDataGridView.AllowUserToAddRows = false;
             mitgliederDataGridView.UserDeletingRow += mitgliederDataGridView_UserDeletingRow;
 
@@ -210,12 +212,12 @@ namespace ClickDummyStudent
             int anzahlLeiter = getAnzahlLeiter();
             if(anzahlLeiter == 0)
             {
-                MessageBox.Show("Es muss ein Gruppenmitglied der Leiter sein. (Falsche S-Nummern oder ungültige Mail-Adressen sind nicht erlaubt)");
+                MessageBox.Show("Es muss ein Gruppenmitglied der Leiter sein. (Falsche S-Nummern oder ungültige Mail-Adressen sind nicht erlaubt)", "Fehler");
                 return;
             }
             else if (anzahlLeiter > 1)
             {
-                MessageBox.Show("Es darf nur ein Gruppenmitglied der Leiter sein. (Falsche S-Nummern oder ungültige Mail-Adressen sind nicht erlaubt)");
+                MessageBox.Show("Es darf nur ein Gruppenmitglied der Leiter sein. (Falsche S-Nummern oder ungültige Mail-Adressen sind nicht erlaubt)", "Fehler");
                 return;
             }
 
@@ -263,7 +265,7 @@ namespace ClickDummyStudent
             updateMitgliederData(error);
             UpdateThemen();
 
-            MessageBox.Show("Änderungen erfolgreich gespeichert!");
+            MessageBox.Show("Änderungen erfolgreich gespeichert!","Super!");
         }
 
         private void updateStudent(Student student)

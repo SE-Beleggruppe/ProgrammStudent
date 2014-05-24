@@ -17,6 +17,7 @@ namespace ClickDummyStudent
         public LoginForm()
         {
             InitializeComponent();
+            this.Text = "Bitte loggen Sie sich ein";
         }
 
         private void LoginButton_Click(object sender, EventArgs e)
@@ -37,7 +38,7 @@ namespace ClickDummyStudent
                         {
                             if (!isInBelegZeitraum(loginTextField.Text))
                             {
-                                MessageBox.Show("Der Anmeldezeitraum für diesen Beleg ist leider abgelaufen. Bitte melden Sie sich beim Dozenten.");
+                                MessageBox.Show("Der Anmeldezeitraum für diesen Beleg ist leider abgelaufen. Bitte melden Sie sich beim Dozenten.","Fehler");
                                 return;
                             }
                             FormLeiterNeuEingeben leiterEingeben = new FormLeiterNeuEingeben(loginTextField.Text);
@@ -46,11 +47,11 @@ namespace ClickDummyStudent
                         }
                         else
                         {
-                            MessageBox.Show("Für diesen Beleg gibt es keine freien Gruppen mehr. Bitte melden Sie sich beim Dozenten.");
+                            MessageBox.Show("Für diesen Beleg gibt es keine freien Gruppen mehr. Bitte melden Sie sich beim Dozenten.", "Fehler");
                             Application.Exit();
                         }
                     }
-                    else MessageBox.Show("Kombination Login/Passwort ist falsch.");
+                    else MessageBox.Show("Kombination Login/Passwort ist falsch.", "Fehler");
                 }   
         }
 
