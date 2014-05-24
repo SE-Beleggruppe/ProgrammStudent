@@ -12,31 +12,31 @@ namespace ClickDummyStudent
 {
     public partial class FormMitgliederNeuEingeben : Form
     {
-        Gruppe gruppe;
+        Gruppe _gruppe;
         public string Belegkennung;
         List<string> rollen;
         public FormMitgliederNeuEingeben(Student leiter, string belegKennung)
         {
             InitializeComponent();
             this.Belegkennung = belegKennung;
-            gruppe = new Gruppe("p", Belegkennung);
+            _gruppe = new Gruppe("p", Belegkennung);
             string newGruppenkennung = getGruppenKennung();
 
-            if (newGruppenkennung != "-1") gruppe.GruppenKennung = newGruppenkennung;
+            if (newGruppenkennung != "-1") _gruppe.GruppenKennung = newGruppenkennung;
             else
             {
                 MessageBox.Show("Keine freien Gruppen für diesen Beleg verfügbar, bitte bei dem Dozenten melden");
                 Application.Exit();
             }
 
-            gruppe.ThemenNummer = getThemenNummer();
-            gruppe.addStudent(leiter);
-            for (int i = 0; i < getMinAnzahlMitglieder() - 1; i++)
+            _gruppe.ThemenNummer = getThemenNummer();
+            _gruppe.addStudent(leiter);
+            for (int i = 0; i < getMaxAnzahlMitglieder(belegKennung) - 1; i++)
             {
-                gruppe.addStudent(new Student("na","na","na","na","na"));
+                _gruppe.addStudent(new Student("na","na","na","na","na"));
             }
             updateRollen();
-            RefreshDatagrid(this.gruppe);
+            RefreshDatagrid(this._gruppe);
             alleMitgliederDataGridView.Rows[0].ReadOnly = true;
         }
 
@@ -47,10 +47,10 @@ namespace ClickDummyStudent
                 MessageBox.Show("Bitte geben Sie ein Passwort ein, mit dem SIe später auf die Gruppe zugreifen können.");
                 return;
             }
-            gruppe.Password = newPasswortTextBox.Text;
+            _gruppe.Password = newPasswortTextBox.Text;
             saveGruppeInDatabase();
-            MessageBox.Show("Anmeldung abgeschlossen! \nIhre Gruppenkennung lautet: " + gruppe.GruppenKennung + "\n(Wichtig für das spätere Anmelden!)");
-            MainForm form = new MainForm(gruppe.GruppenKennung, gruppe.Belegkennung);
+            MessageBox.Show("Anmeldung abgeschlossen! \nIhre Gruppenkennung lautet: " + _gruppe.GruppenKennung + "\n(Wichtig für das spätere Anmelden!)");
+            MainForm form = new MainForm(_gruppe.GruppenKennung, _gruppe.Belegkennung);
             form.Show();
             this.Hide();
         }
@@ -59,7 +59,7 @@ namespace ClickDummyStudent
         {
             rollen = new List<string>();
             Database db = new Database();
-            List<string[]> output = db.ExecuteQuery("Select Rolle from Rolle where Rolle in (select Rolle from Zuordnung_BelegRolle where Belegkennung=\"" + gruppe.Belegkennung + "\")");
+            List<string[]> output = db.ExecuteQuery("Select Rolle from Rolle where Rolle in (select Rolle from Zuordnung_BelegRolle where Belegkennung=\"" + _gruppe.Belegkennung + "\")");
             foreach (string[] info in output)
             {
                 rollen.Add(info[0]);
@@ -92,7 +92,7 @@ namespace ClickDummyStudent
         private string getGruppenKennung()
         {
             Database db = new Database();
-            List<string[]> output1 = db.ExecuteQuery("select Casekennung from Zuordnung_BelegCases where Belegkennung=\"" + gruppe.Belegkennung + "\" and Casekennung not in (select Gruppenkennung from Zuordnung_GruppeBeleg)");
+            List<string[]> output1 = db.ExecuteQuery("select Casekennung from Zuordnung_BelegCases where Belegkennung=\"" + _gruppe.Belegkennung + "\" and Casekennung not in (select Gruppenkennung from Zuordnung_GruppeBeleg)");
             foreach (string[] info in output1)
             {
                 return info[0];
@@ -124,14 +124,22 @@ namespace ClickDummyStudent
         private int getMinAnzahlMitglieder()
         {
             Database db = new Database();
-            List<string[]> output = db.ExecuteQuery("select MinAnzMitglieder from Beleg where Belegkennung=\"" + gruppe.Belegkennung + "\"");
+            List<string[]> output = db.ExecuteQuery("select MinAnzMitglieder from Beleg where Belegkennung=\"" + _gruppe.Belegkennung + "\"");
             int anz;
             int.TryParse(output.First()[0], out anz);
             return anz;   
         }
 
+        private int getMaxAnzahlMitglieder(string beKennung)
+        {
+            Database db = new Database();
+            List<string[]> output = db.ExecuteQuery("select MaxAnzMitglieder from Beleg where Belegkennung=\"" + beKennung + "\"");
+            return Convert.ToInt32(output.First()[0]);
+        }
+
         private void saveGruppeInDatabase()
         {
+            string fehlermeldung = "";
             for (int i = 0; i < alleMitgliederDataGridView.Rows.Count; i++)
             {
                 string name = (string)alleMitgliederDataGridView.Rows[i].Cells[0].Value;
@@ -140,23 +148,36 @@ namespace ClickDummyStudent
                 string mail = (string)alleMitgliederDataGridView.Rows[i].Cells[3].Value;
                 string rolle = (string)alleMitgliederDataGridView.Rows[i].Cells[4].FormattedValue.ToString();
 
-                if (sNummer != "na" && sNummer != "" && sNummer != null)
+                if (sNummer != "na" && !string.IsNullOrEmpty(sNummer))
                 {
-                    if (checkSNummer(sNummer))
+                    if (!checkSNummer(sNummer))
                     {
-                        insertStudent(new Student(name, vorname, sNummer, mail, rolle), gruppe);
+                       fehlermeldung += "Student " + name + " " + vorname + " hat weder 'na' noch eine gültige S-Nummer eingetragen und konnte nicht hinzugefügt werden. (" + sNummer + ")\n";
                     }
-                    else
-                    {
-                        MessageBox.Show("Student " + name + " " + vorname + " hat weder 'na' noch eine gültige S-Nummer eingetragen und wurde nicht hinzugefügt. (" + sNummer + ")");
-                    }
-                    
+                }
+            }
+            if (fehlermeldung != "")
+            {
+                MessageBox.Show(fehlermeldung);
+                return;
+            }
+            for (int i = 0; i < alleMitgliederDataGridView.Rows.Count; i++)
+            {
+                string name = (string)alleMitgliederDataGridView.Rows[i].Cells[0].Value;
+                string vorname = (string)alleMitgliederDataGridView.Rows[i].Cells[1].Value;
+                string sNummer = (string)alleMitgliederDataGridView.Rows[i].Cells[2].Value;
+                string mail = (string)alleMitgliederDataGridView.Rows[i].Cells[3].Value;
+                string rolle = (string)alleMitgliederDataGridView.Rows[i].Cells[4].FormattedValue.ToString();
+
+                if (sNummer != "na" && !string.IsNullOrEmpty(sNummer))
+                {
+                    insertStudent(new Student(name,vorname,sNummer,mail,rolle), _gruppe );
                 }
             }
             Database db = new Database();
-            string query = "insert into Gruppe values(\"" + gruppe.GruppenKennung + "\"," + gruppe.ThemenNummer + ",\"" + gruppe.Password + "\")";
+            string query = "insert into Gruppe values(\"" + _gruppe.GruppenKennung + "\"," + _gruppe.ThemenNummer + ",\"" + _gruppe.Password + "\")";
             db.ExecuteQuery(query);
-            query = "insert into Zuordnung_GruppeBeleg values(\"" + gruppe.GruppenKennung + "\",\"" + gruppe.Belegkennung + "\")";
+            query = "insert into Zuordnung_GruppeBeleg values(\"" + _gruppe.GruppenKennung + "\",\"" + _gruppe.Belegkennung + "\")";
             db.ExecuteQuery(query);
         }
 

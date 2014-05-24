@@ -13,7 +13,7 @@ namespace ClickDummyStudent
 {
     public partial class MainForm : Form
     {
-        Gruppe gruppe;
+        Gruppe _gruppe;
         List<string> rollen = new List<string>();
         int minAnzahl;
         int maxAnzahl;
@@ -31,8 +31,7 @@ namespace ClickDummyStudent
             minAnzahl = getMinAnzahlMitglieder(belegkennung);
             maxAnzahl = getMaxAnzahlMitglieder(belegkennung);
 
-            this.gruppe = GetGruppeFromKennungS(gruppenKennung, belegkennung);
-            this.gruppe.Belegkennung = belegkennung;
+            this._gruppe = GetGruppeFromKennungS(gruppenKennung, belegkennung);
 
             mitgliederDataGridView.AllowUserToAddRows = false;
             mitgliederDataGridView.UserDeletingRow += mitgliederDataGridView_UserDeletingRow;
@@ -49,12 +48,19 @@ namespace ClickDummyStudent
             string sNummerToDelete = (string)rowToDelete.Cells[2].Value;
             if (sNummerToDelete == "na") e.Cancel = true;
 
-            Database db = new Database();
-            db.ExecuteQuery("delete from Student where sNummer=\"" + sNummerToDelete + "\"");
-            db.ExecuteQuery("delete from Zuordnung_GruppeStudent where sNummer=\"" + sNummerToDelete + "\"");
+            DialogResult dialogResult = MessageBox.Show("Wollen Sie den Studenten " + sNummerToDelete + " wirklich löschen?", "Achtung", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                Database db = new Database();
+                db.ExecuteQuery("delete from Student where sNummer=\"" + sNummerToDelete + "\"");
+                db.ExecuteQuery("delete from Zuordnung_GruppeStudent where sNummer=\"" + sNummerToDelete + "\"");
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
 
-            gruppe = GetGruppeFromKennungS(gruppe.GruppenKennung, gruppe.Belegkennung);
-            updateMitgliederData(null);
+            
         }
 
 
@@ -100,7 +106,8 @@ namespace ClickDummyStudent
             (mitgliederDataGridView.Columns[4] as DataGridViewComboBoxColumn).DataSource = rollen;
             (mitgliederDataGridView.Columns[4] as DataGridViewComboBoxColumn).MinimumWidth = 150;
             (mitgliederDataGridView.Columns[3] as DataGridViewTextBoxColumn).MinimumWidth = 250;
-            foreach (Student info in gruppe.Studenten)
+
+            foreach (Student info in _gruppe.Studenten)
             {
                 int number = mitgliederDataGridView.Rows.Add();
                 mitgliederDataGridView.Rows[number].Cells[0].Value = info.Name;
@@ -133,21 +140,21 @@ namespace ClickDummyStudent
         {
             Database db = new Database();
             List<string> erg = new List<string>();
-            List<string[]> output = db.ExecuteQuery("select Aufgabe from Thema where Themennummer in (select Themennummer from Zuordnung_BelegThema where Belegkennung=\"" + gruppe.Belegkennung + "\")");
+            List<string[]> output = db.ExecuteQuery("select Aufgabe from Thema where Themennummer in (select Themennummer from Zuordnung_BelegThema where Belegkennung=\"" + _gruppe.Belegkennung + "\")");
             foreach (string[] info in output)
             {
                 erg.Add(info[0]);
             }
             comboBoxThemen.DataSource = erg;
 
-            comboBoxThemen.SelectedItem = db.ExecuteQuery("select Aufgabe from Thema where Themennummer in (select Themennummer from Gruppe where Gruppenkennung=\"" + gruppe.GruppenKennung + "\")").First()[0];
+            comboBoxThemen.SelectedItem = db.ExecuteQuery("select Aufgabe from Thema where Themennummer in (select Themennummer from Gruppe where Gruppenkennung=\"" + _gruppe.GruppenKennung + "\")").First()[0];
         }
 
         private void UpdateRollen()
         {
             rollen = new List<string>();
             Database db = new Database();
-            List<string[]> output = db.ExecuteQuery("Select Rolle from Rolle where Rolle in (select Rolle from Zuordnung_BelegRolle where Belegkennung=\"" + gruppe.Belegkennung + "\")");
+            List<string[]> output = db.ExecuteQuery("Select Rolle from Rolle where Rolle in (select Rolle from Zuordnung_BelegRolle where Belegkennung=\"" + _gruppe.Belegkennung + "\")");
             foreach (string[] info in output)
             {
                 rollen.Add(info[0]);
@@ -175,8 +182,9 @@ namespace ClickDummyStudent
             Application.Exit();
         }
 
-        private bool CheckIfLeiterIsThere()
+        private int getAnzahlLeiter()
         {
+            int anzahlLeiter = 0;
             for (int i = 0; i < mitgliederDataGridView.Rows.Count; i++)
             {
                 string name = (string)mitgliederDataGridView.Rows[i].Cells[0].Value;
@@ -190,20 +198,27 @@ namespace ClickDummyStudent
 
                     if (rolle == "Leitung" && sNummer != "na" && (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly || checkSNummer(sNummer)) && (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly || checkMail(mail)))
                     {
-                        return true;
+                        anzahlLeiter++;
                     }
                 }
             }
-            return false;
+            return anzahlLeiter;
         }
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            if(!CheckIfLeiterIsThere())
+            int anzahlLeiter = getAnzahlLeiter();
+            if(anzahlLeiter == 0)
             {
-                MessageBox.Show("Es muss mindestens ein Gruppenmitglied der Leiter sein. (Falsche S-Nummern oder ungültige Mail-Adressen sind nicht erlaubt)");
+                MessageBox.Show("Es muss ein Gruppenmitglied der Leiter sein. (Falsche S-Nummern oder ungültige Mail-Adressen sind nicht erlaubt)");
                 return;
             }
+            else if (anzahlLeiter > 1)
+            {
+                MessageBox.Show("Es darf nur ein Gruppenmitglied der Leiter sein. (Falsche S-Nummern oder ungültige Mail-Adressen sind nicht erlaubt)");
+                return;
+            }
+
             List<Student> error = new List<Student>();
             for (int i = 0; i < mitgliederDataGridView.Rows.Count; i++)
             {
@@ -221,7 +236,7 @@ namespace ClickDummyStudent
                         if (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly || checkMail(mail))
                         {
                             if (mitgliederDataGridView.Rows[i].Cells[2].ReadOnly) updateStudent(student);
-                            else insertStudent(student, gruppe);
+                            else insertStudent(student, _gruppe);
                         }
                         else
                         {
@@ -239,11 +254,11 @@ namespace ClickDummyStudent
             }
             int themennummer = getThemenNummerFromThema((string)comboBoxThemen.SelectedItem);
             Database db = new Database();
-            db.ExecuteQuery("update Gruppe set Themennummer=" + themennummer + " where Gruppenkennung=\"" + gruppe.GruppenKennung + "\"");
+            db.ExecuteQuery("update Gruppe set Themennummer=" + themennummer + " where Gruppenkennung=\"" + _gruppe.GruppenKennung + "\"");
 
 
-            this.gruppe = GetGruppeFromKennungS(gruppe.GruppenKennung, gruppe.Belegkennung);
-            this.gruppe.Belegkennung = gruppe.Belegkennung;
+            this._gruppe = GetGruppeFromKennungS(_gruppe.GruppenKennung, _gruppe.Belegkennung);
+            this._gruppe.Belegkennung = _gruppe.Belegkennung;
             UpdateRollen();
             updateMitgliederData(error);
             UpdateThemen();
