@@ -288,7 +288,11 @@ namespace ClickDummyStudent
             updateMitgliederData(error);
             UpdateThemen();
 
-            MessageBox.Show("Änderungen erfolgreich gespeichert!","Super!");
+            if (error.Count == 0) MessageBox.Show("Änderungen erfolgreich gespeichert!", "Super!");
+            else
+                MessageBox.Show(
+                    "Änderungen wurden, bis auf die rot markierten Studenten, gespeichert. Bei diesen bitte S-Nummer oder Mail-Adresse anpassen.",
+                    "Bestätigung");
         }
 
         private void updateStudent(Student student)
