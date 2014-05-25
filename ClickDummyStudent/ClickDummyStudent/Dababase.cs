@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Sybase.Data.AseClient;
 
 namespace ClickDummyStudent
@@ -14,10 +15,10 @@ namespace ClickDummyStudent
                                     "UID=case04;PWD=itcyisay;" +
                                     "Database=case04;";
 
-        AseConnection conn;
+        AseConnection _conn;
         public Database()
         {
-            conn = new AseConnection(ConnectionString);
+            _conn = new AseConnection(ConnectionString);
         }
 
         public void Connect()
@@ -25,7 +26,7 @@ namespace ClickDummyStudent
 
             try
             {
-                conn.Open();
+                _conn.Open();
             }
             catch (AseException ex)
             {
@@ -38,25 +39,35 @@ namespace ClickDummyStudent
         public List<string[]> ExecuteQuery(string query)
         {
             Connect();
-            AseCommand command = new AseCommand(query, conn);
-            using (var dataReader = command.ExecuteReader())
+            var strings = new List<string[]>();
+            var command = new AseCommand(query, _conn);
+            try
             {
-                int col = dataReader.FieldCount;
-                List<string[]> strings = new List<string[]>();
-
-                while (dataReader.Read())
+                using (var dataReader = command.ExecuteReader())
                 {
-                    string[] array = new string[col];
-                    for (int i = 0; i < col; i++)
+                    var col = dataReader.FieldCount;
+
+
+                    while (dataReader.Read())
                     {
-                        array[i] = dataReader.GetString(i).Trim();
+                        var array = new string[col];
+                        for (var i = 0; i < col; i++)
+                        {
+                            array[i] = dataReader.GetString(i).Trim();
+                        }
+                        strings.Add(array);
                     }
-                    strings.Add(array);
                 }
-                conn.Close();
-                return strings;
+            }
+            catch (InvalidOperationException exception)
+            {
+                MessageBox.Show(
+                    "Es kann leider keine Verbindung zum Datenbank-Server augebaut werden. Bitte überprüfen Sie, ob Sie im Intranet sind, bzw. ob die VPN-Verbindung noch besteht.");
+                System.Environment.Exit(1);
             }
 
+            _conn.Close();
+            return strings;
         }
     }
 }
