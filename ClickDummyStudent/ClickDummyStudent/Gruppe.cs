@@ -24,7 +24,7 @@ namespace ClickDummyStudent
         public Gruppe(string kennung, int themennummer, string password)
         {
             this.GruppenKennung = kennung;
-            this.ThemenNummer = ThemenNummer;
+            this.ThemenNummer = themennummer;
             this.Password = password;
             this.Studenten = new List<Student>();
         }

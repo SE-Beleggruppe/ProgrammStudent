@@ -144,15 +144,23 @@ namespace ClickDummyStudent
         private void UpdateThemen()
         {
             Database db = new Database();
-            List<string> erg = new List<string>();
-            List<string[]> output = db.ExecuteQuery("select Aufgabe from Thema where Themennummer in (select Themennummer from Zuordnung_BelegThema where Belegkennung=\"" + _gruppe.Belegkennung + "\")");
+            List<Thema> erg = new List<Thema>();
+            List<string[]> output = db.ExecuteQuery("select * from Thema where Themennummer in (select Themennummer from Zuordnung_BelegThema where Belegkennung=\"" + _gruppe.Belegkennung + "\")");
             foreach (string[] info in output)
             {
-                erg.Add(info[0]);
+                erg.Add(new Thema(Convert.ToInt32(info[0]), info[1]));
             }
             comboBoxThemen.DataSource = erg;
+            comboBoxThemen.DisplayMember = "AufgabenName";
+            string[] thisThema = db.ExecuteQuery("select * from Thema where Themennummer in (select Themennummer from Gruppe where Gruppenkennung=\"" + _gruppe.GruppenKennung + "\")").First();
+            int index = 0;
+            foreach (Thema tempThema in erg)
+            {
+                if (tempThema.ThemenNummer == Convert.ToInt32(thisThema[0]))
+                    comboBoxThemen.SelectedIndex = index;
 
-            comboBoxThemen.SelectedItem = db.ExecuteQuery("select Aufgabe from Thema where Themennummer in (select Themennummer from Gruppe where Gruppenkennung=\"" + _gruppe.GruppenKennung + "\")").First()[0];
+                index++;
+            }
         }
 
         private void UpdateRollen()
@@ -269,7 +277,7 @@ namespace ClickDummyStudent
                     
                 }
             }
-            int themennummer = getThemenNummerFromThema((string)comboBoxThemen.SelectedItem);
+            int themennummer = ((Thema) comboBoxThemen.SelectedItem).ThemenNummer;
             Database db = new Database();
             db.ExecuteQuery("update Gruppe set Themennummer=" + themennummer + " where Gruppenkennung=\"" + _gruppe.GruppenKennung + "\"");
 
@@ -297,12 +305,6 @@ namespace ClickDummyStudent
             db.ExecuteQuery(query);
             query = "insert into Zuordnung_GruppeStudent values(\"" + gruppe.GruppenKennung + "\",\"" + student.SNummer + "\")";
             db.ExecuteQuery(query);
-        }
-
-        private int getThemenNummerFromThema(string thema)
-        {
-            Database db = new Database();
-            return Convert.ToInt32(db.ExecuteQuery("select Themennummer from Thema where Aufgabe=\"" + thema + "\"").First()[0]);
         }
 
         private bool checkSNummer(string sNummer)
