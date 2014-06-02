@@ -99,17 +99,6 @@ namespace ClickDummyStudent
             return "-1";
         }
 
-        private bool isCaseFree(string caseS)
-        {
-            Database db = new Database();
-            List<string[]> output = db.ExecuteQuery("select Gruppenkennung from Gruppe");
-            foreach (string[] info in output)
-            {
-                if(info[0] == caseS) return false;
-            }
-            return true;
-        }
-
         private int getThemenNummer()
         {
             Database db = new Database();
@@ -118,15 +107,6 @@ namespace ClickDummyStudent
             int nr = 0;
             if(output.Count > 0) int.TryParse(output.First()[0], out nr);
             return nr;
-        }
-
-        private int getMinAnzahlMitglieder()
-        {
-            Database db = new Database();
-            List<string[]> output = db.ExecuteQuery("select MinAnzMitglieder from Beleg where Belegkennung=\"" + _gruppe.Belegkennung + "\"");
-            int anz;
-            int.TryParse(output.First()[0], out anz);
-            return anz;   
         }
 
         private int getMaxAnzahlMitglieder(string beKennung)
@@ -174,7 +154,7 @@ namespace ClickDummyStudent
                 }
             }
             Database db = new Database();
-            string query = "insert into Gruppe values(\"" + _gruppe.GruppenKennung + "\"," + _gruppe.ThemenNummer + ",\"" + _gruppe.Password + "\")";
+            string query = "insert into Gruppe values(\"" + _gruppe.GruppenKennung + "\"," + _gruppe.ThemenNummer + ",internal_encrypt(\"" + _gruppe.Password + "\"))";
             db.ExecuteQuery(query);
             query = "insert into Zuordnung_GruppeBeleg values(\"" + _gruppe.GruppenKennung + "\",\"" + _gruppe.Belegkennung + "\")";
             db.ExecuteQuery(query);

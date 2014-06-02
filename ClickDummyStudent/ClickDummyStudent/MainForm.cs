@@ -78,6 +78,7 @@ namespace ClickDummyStudent
                 Gruppe neu = new Gruppe(info[0], Convert.ToInt32(info[1]), info[2]);
                 neu.Belegkennung = belegkennung;
                 neu.Studenten = null;
+                neu.Studenten = new List<Student>();
                 foreach (string[] info2 in db.ExecuteQuery("select * from Student where sNummer in (select sNummer from Zuordnung_GruppeStudent where Gruppenkennung=\"" + kennung + "\")"))
                 {
                     neu.addStudent(new Student(info2[2], info2[1], info2[0], info2[3], info2[4]));
@@ -112,19 +113,23 @@ namespace ClickDummyStudent
             (mitgliederDataGridView.Columns[4] as DataGridViewComboBoxColumn).MinimumWidth = 150;
             (mitgliederDataGridView.Columns[3] as DataGridViewTextBoxColumn).MinimumWidth = 250;
 
-            foreach (Student info in _gruppe.Studenten)
+            if (_gruppe.Studenten != null)
             {
-                int number = mitgliederDataGridView.Rows.Add();
-                mitgliederDataGridView.Rows[number].Cells[0].Value = info.Name;
-                mitgliederDataGridView.Rows[number].Cells[1].Value = info.Vorname;
-                mitgliederDataGridView.Rows[number].Cells[2].Value = info.SNummer;
-                if (info.SNummer != "na") mitgliederDataGridView.Rows[number].Cells[2].ReadOnly = true;
-                mitgliederDataGridView.Rows[number].Cells[3].Value = info.Mail;
-                mitgliederDataGridView.Rows[number].Cells[4].Value = info.Rolle;
+                foreach (Student info in _gruppe.Studenten)
+                {
+                    int number = mitgliederDataGridView.Rows.Add();
+                    mitgliederDataGridView.Rows[number].Cells[0].Value = info.Name;
+                    mitgliederDataGridView.Rows[number].Cells[1].Value = info.Vorname;
+                    mitgliederDataGridView.Rows[number].Cells[2].Value = info.SNummer;
+                    if (info.SNummer != "na") mitgliederDataGridView.Rows[number].Cells[2].ReadOnly = true;
+                    mitgliederDataGridView.Rows[number].Cells[3].Value = info.Mail;
+                    mitgliederDataGridView.Rows[number].Cells[4].Value = info.Rolle;
 
-                if (info.SNummer == "na" && number < minAnzahl) 
-                    mitgliederDataGridView.Rows[number].DefaultCellStyle.BackColor = Color.Yellow;
+                    if (info.SNummer == "na" && number < minAnzahl)
+                        mitgliederDataGridView.Rows[number].DefaultCellStyle.BackColor = Color.Yellow;
+                }
             }
+            
             if (errorStudenten != null)
             {
                 foreach (Student info in errorStudenten)

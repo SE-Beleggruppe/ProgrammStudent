@@ -77,18 +77,8 @@ namespace ClickDummyStudent
         private bool checkGruppeLogin(string login, string password)
         {
             Database db = new Database();
-            List<string[]> output = db.ExecuteQuery("select * from Gruppe");
-            foreach (string[] info in output)
-            {
-                if (info[0] == login)
-                {
-                    if (info[2] == password)
-                    {
-                        return true;
-                    }
-                    else return false;
-                }
-            }
+            List<string[]> output = db.ExecuteQuery("select * from Gruppe where Gruppenkennung=\"" + login + "\" and Passwort=internal_encrypt(\"" + password + "\")");
+            if (output.Count != 0) return true;
             return false;
         }
 
