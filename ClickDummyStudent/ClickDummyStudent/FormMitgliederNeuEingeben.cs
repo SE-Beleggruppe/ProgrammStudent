@@ -47,7 +47,7 @@ namespace ClickDummyStudent
         {
             if (newPasswortTextBox.Text == "")
             {
-                MessageBox.Show("Bitte geben Sie ein Passwort ein, mit dem SIe später auf die Gruppe zugreifen können.", "Fehler");
+                MessageBox.Show("Bitte geben Sie ein Passwort ein, mit dem Sie später auf die Gruppe zugreifen können.", "Fehler");
                 return;
             }
             _gruppe.Password = newPasswortTextBox.Text;
@@ -132,6 +132,14 @@ namespace ClickDummyStudent
                     if (!checkSNummer(sNummer))
                     {
                        fehlermeldung += "Student " + name + " " + vorname + " hat weder 'na' noch eine gültige S-Nummer eingetragen und konnte nicht hinzugefügt werden. (" + sNummer + ")\n";
+                    }
+                    if (name == "" || name.Length > 15)
+                    {
+                        fehlermeldung += "Student " + name + " " + vorname + " hat einen leeren oder zu langen (>15 Zeichen) Nachnamen und konnte nicht hinzugefügt werden. (" + sNummer + ")\n";
+                    }
+                    if (vorname == "" || vorname.Length > 15)
+                    {
+                        fehlermeldung += "Student " + name + " " + vorname + " hat einen leeren oder zu langen (>15 Zeichen) Vornamen und konnte nicht hinzugefügt werden. (" + sNummer + ")\n";
                     }
                 }
             }
