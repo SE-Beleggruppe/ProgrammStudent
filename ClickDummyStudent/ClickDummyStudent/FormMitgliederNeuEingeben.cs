@@ -133,11 +133,11 @@ namespace ClickDummyStudent
                     {
                        fehlermeldung += "Student " + name + " " + vorname + " hat weder 'na' noch eine gültige S-Nummer eingetragen und konnte nicht hinzugefügt werden. (" + sNummer + ")\n";
                     }
-                    if (name == "" || name.Length > 15)
+                    if (string.IsNullOrEmpty(name) || name.Length > 15)
                     {
                         fehlermeldung += "Student " + name + " " + vorname + " hat einen leeren oder zu langen (>15 Zeichen) Nachnamen und konnte nicht hinzugefügt werden. (" + sNummer + ")\n";
                     }
-                    if (vorname == "" || vorname.Length > 15)
+                    if ( string.IsNullOrEmpty(vorname) || vorname.Length > 15)
                     {
                         fehlermeldung += "Student " + name + " " + vorname + " hat einen leeren oder zu langen (>15 Zeichen) Vornamen und konnte nicht hinzugefügt werden. (" + sNummer + ")\n";
                     }
