@@ -13,10 +13,15 @@ namespace ClickDummyStudent
 {
     public partial class MainForm : Form
     {
+        // Gruppe, die angezeigt werden soll
         Gruppe _gruppe;
+        // Liste der Rollen für ComboBox
         List<string> rollen = new List<string>();
+        // Min- und Max-Anzahl, die durch Beleg gegeben sind
         int minAnzahl;
         int maxAnzahl;
+
+        // Konstruktor
         public MainForm(string gruppenKennung, string belegkennung)
         {
             InitializeComponent();
@@ -24,6 +29,7 @@ namespace ClickDummyStudent
 
             comboBoxThemen.DropDownStyle = ComboBoxStyle.DropDownList;
 
+            // Anmeldezeitraum checken -> wenn überschritten, Felder sperren
             if (!isInBelegZeitraum(belegkennung))
             {
                 mitgliederDataGridView.ReadOnly = true;
@@ -47,6 +53,7 @@ namespace ClickDummyStudent
             UpdateThemen();
         }
 
+        // Eventhandler, wenn Student gelöscht werden soll
         void mitgliederDataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             DataGridViewRow rowToDelete = e.Row;
@@ -56,6 +63,7 @@ namespace ClickDummyStudent
             DialogResult dialogResult = MessageBox.Show("Wollen Sie den Studenten " + sNummerToDelete + " wirklich löschen?", "Achtung", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
+                // Soll gelöscht werden (nach Nachfrage-MessageBox)
                 Database db = new Database();
                 db.ExecuteQuery("delete from Student where sNummer=\"" + sNummerToDelete + "\"");
                 db.ExecuteQuery("delete from Zuordnung_GruppeStudent where sNummer=\"" + sNummerToDelete + "\"");
@@ -69,7 +77,7 @@ namespace ClickDummyStudent
         }
 
 
-
+        // Gruppe aus Datenbank holen
         private Gruppe GetGruppeFromKennungS(string kennung, string belegkennung)
         {
             Database db = new Database();
@@ -79,6 +87,7 @@ namespace ClickDummyStudent
                 neu.Belegkennung = belegkennung;
                 neu.Studenten = null;
                 neu.Studenten = new List<Student>();
+                // Studenten dieser Gruppe aus Datenbank holen
                 foreach (string[] info2 in db.ExecuteQuery("select * from Student where sNummer in (select sNummer from Zuordnung_GruppeStudent where Gruppenkennung=\"" + kennung + "\")"))
                 {
                     neu.addStudent(new Student(info2[2], info2[1], info2[0], info2[3], info2[4]));
@@ -97,6 +106,7 @@ namespace ClickDummyStudent
             return null;
         }
 
+        // Zeitraum aus Datenbank holen und checken, ob aktuelles Datum drin liegt
         private bool isInBelegZeitraum(string belegkennung)
         {
             Database db = new Database();
@@ -106,6 +116,7 @@ namespace ClickDummyStudent
             return true;
         }
 
+        // Mitglieder-Anzeige refreshen
         private void updateMitgliederData(List<Student> errorStudenten)
         {
             mitgliederDataGridView.Rows.Clear();
@@ -125,6 +136,7 @@ namespace ClickDummyStudent
                     mitgliederDataGridView.Rows[number].Cells[3].Value = info.Mail;
                     mitgliederDataGridView.Rows[number].Cells[4].Value = info.Rolle;
 
+                    // Gelb, wenn Mitglied noch ausgefüllt werden muss (mindest-Anzahl)
                     if (info.SNummer == "na" && number < minAnzahl)
                         mitgliederDataGridView.Rows[number].DefaultCellStyle.BackColor = Color.Yellow;
                 }
@@ -141,11 +153,13 @@ namespace ClickDummyStudent
                     mitgliederDataGridView.Rows[number].Cells[3].Value = info.Mail;
                     mitgliederDataGridView.Rows[number].Cells[4].Value = info.Rolle;
 
+                    // Rot, wenn beim speichern dieses Studenten Fehler aufgetreten sind
                     mitgliederDataGridView.Rows[number].DefaultCellStyle.BackColor = Color.Red;
                 }
             }
         }
 
+        // verfügbare Themen aus DB ziehen
         private void UpdateThemen()
         {
             Database db = new Database();
@@ -168,6 +182,7 @@ namespace ClickDummyStudent
             }
         }
 
+        // Rollen aus Datenbank ziehen
         private void UpdateRollen()
         {
             rollen = new List<string>();
@@ -180,6 +195,7 @@ namespace ClickDummyStudent
             rollen.Add("na");
         }
 
+        // vorgegebene Mindestanzahl aus DB 
         private int getMinAnzahlMitglieder(string beKennung)
         {
             Database db = new Database();
@@ -187,6 +203,7 @@ namespace ClickDummyStudent
             return Convert.ToInt32(output.First()[0]);
         }
 
+        // vorgegebene Maximalanzahl Studenten aus DB holen
         private int getMaxAnzahlMitglieder(string beKennung)
         {
             Database db = new Database();
@@ -194,12 +211,14 @@ namespace ClickDummyStudent
             return Convert.ToInt32(output.First()[0]);
         }
 
+        // Closing-Event überschrieben
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
             Application.Exit();
         }
 
+        // Azhal der eingetragenen Leiter überprüfen (darf nur ein Leiter und auch mindestens einer)
         private int getAnzahlLeiter()
         {
             int anzahlLeiter = 0;
@@ -223,6 +242,7 @@ namespace ClickDummyStudent
             return anzahlLeiter;
         }
 
+        // Speichern-Button wurde geklickt
         private void saveButton_Click(object sender, EventArgs e)
         {
             int anzahlLeiter = getAnzahlLeiter();
@@ -237,6 +257,7 @@ namespace ClickDummyStudent
                 return;
             }
 
+            // Wenn Fehler bei Studenten auftreten, werden sie dieser Liste hinzugefügt und rot markiert ausgegeben
             List<Student> error = new List<Student>();
 
             for (int i = 0; i < mitgliederDataGridView.Rows.Count; i++)
@@ -282,6 +303,7 @@ namespace ClickDummyStudent
                     
                 }
             }
+            // Thema der Gruppe in der DB zuordnen
             int themennummer = ((Thema) comboBoxThemen.SelectedItem).ThemenNummer;
             Database db = new Database();
             db.ExecuteQuery("update Gruppe set Themennummer=" + themennummer + " where Gruppenkennung=\"" + _gruppe.GruppenKennung + "\"");
@@ -300,6 +322,7 @@ namespace ClickDummyStudent
                     "Bestätigung");
         }
 
+        // Student ist schon in DB -> update
         private void updateStudent(Student student)
         {
             Database db = new Database();
@@ -307,6 +330,7 @@ namespace ClickDummyStudent
             db.ExecuteQuery(query);
         }
 
+        // ist ein neuer Student -> insert
         private void insertStudent(Student student, Gruppe gruppe)
         {
             Database db = new Database();
@@ -316,6 +340,7 @@ namespace ClickDummyStudent
             db.ExecuteQuery(query);
         }
 
+        // S-Nummer überprüfen
         private bool checkSNummer(string sNummer)
         {
             Database db = new Database();
@@ -336,10 +361,11 @@ namespace ClickDummyStudent
             return true;
         }
 
+        // Mail-Adresse überprüfen
         private bool checkMail(string mail)
         {
             Regex regExp = new Regex("\\b[!#$%&'*+./0-9=?_`a-z{|}~^-]+@[.0-9a-z-]+\\.[a-z]{2,6}\\b");
-            Match match = regExp.Match(mail);
+            Match match = regExp.Match(mail.ToLower());
             if (match.Success)
             {
                 return true;

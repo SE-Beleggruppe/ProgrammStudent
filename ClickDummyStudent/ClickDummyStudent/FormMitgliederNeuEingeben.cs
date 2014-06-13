@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace ClickDummyStudent
 {
     public partial class FormMitgliederNeuEingeben : Form
     {
+        // angzeigte Gruppe
         Gruppe _gruppe;
         public string Belegkennung;
+
+        // mögliche Rollen, die ausgewählt werden können
         List<string> rollen;
+
+        // Konstruktor 
         public FormMitgliederNeuEingeben(Student leiter, string belegKennung)
         {
             InitializeComponent();
@@ -25,6 +27,7 @@ namespace ClickDummyStudent
             _gruppe = new Gruppe("p", Belegkennung);
             string newGruppenkennung = getGruppenKennung();
 
+            // Wenn getGruppenkennung -1 zurückliefert, dann sind keine freien Gruppen mehr verfügbar!!!! :)
             if (newGruppenkennung != "-1") _gruppe.GruppenKennung = newGruppenkennung;
             else
             {
@@ -32,10 +35,12 @@ namespace ClickDummyStudent
                 Application.Exit();
             }
 
+            // Da neue Gruppe, ist noch kein Thema festgelegt, es wird das erstbeste genommen
             _gruppe.ThemenNummer = getThemenNummer();
             _gruppe.addStudent(leiter);
             for (int i = 0; i < getMaxAnzahlMitglieder(belegKennung) - 1; i++)
             {
+                // Platzhalter-Studenten einfügen
                 _gruppe.addStudent(new Student("na","na","na","na","na"));
             }
             updateRollen();
@@ -43,9 +48,11 @@ namespace ClickDummyStudent
             alleMitgliederDataGridView.Rows[0].ReadOnly = true;
         }
 
+        // Bestätigen-Button wurde geklickt-Eventhandler
         private void commitButton_Click(object sender, EventArgs e)
         {
-            if (newPasswortTextBox.Text == "")
+            // neues Passwort auf Vollständigkeit überprüfen
+            if (string.IsNullOrEmpty(newPasswortTextBox.Text))
             {
                 MessageBox.Show("Bitte geben Sie ein Passwort ein, mit dem Sie später auf die Gruppe zugreifen können.", "Fehler");
                 return;
@@ -54,6 +61,7 @@ namespace ClickDummyStudent
             saveGruppeInDatabase();
         }
 
+        // Rollen aus der Datenbank ziehen
         private void updateRollen()
         {
             rollen = new List<string>();
@@ -66,6 +74,7 @@ namespace ClickDummyStudent
             rollen.Add("na");
         }
 
+        // Studenten-DatagridView refreshen
         private void RefreshDatagrid(Gruppe gruppe)
         {
             alleMitgliederDataGridView.Rows.Clear();
@@ -83,11 +92,13 @@ namespace ClickDummyStudent
             }
         }
 
+        // Anmeldung abbrechen
         private void cancelButton_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
+        // neue, freie Gruppenkennung aus der Datenbank holen
         private string getGruppenKennung()
         {
             Database db = new Database();
@@ -99,6 +110,7 @@ namespace ClickDummyStudent
             return "-1";
         }
 
+        // gültige Themennummer aus der Datenbank holen
         private int getThemenNummer()
         {
             Database db = new Database();
@@ -109,6 +121,7 @@ namespace ClickDummyStudent
             return nr;
         }
 
+        // maximal zulässige Mitgliederanzahl aus der Datenbank holen (Beleg abhängig)
         private int getMaxAnzahlMitglieder(string beKennung)
         {
             Database db = new Database();
@@ -116,6 +129,7 @@ namespace ClickDummyStudent
             return Convert.ToInt32(output.First()[0]);
         }
 
+        // Gruppe wurde überprüft und kann gepspeichert werden :)
         private void saveGruppeInDatabase()
         {
             string fehlermeldung = "";
@@ -129,25 +143,37 @@ namespace ClickDummyStudent
 
                 if (sNummer != "na" && !string.IsNullOrEmpty(sNummer))
                 {
+                    // S-Nummer überprüfen
                     if (!checkSNummer(sNummer))
                     {
                        fehlermeldung += "Student " + name + " " + vorname + " hat weder 'na' noch eine gültige S-Nummer eingetragen und konnte nicht hinzugefügt werden. (" + sNummer + ")\n";
                     }
+                    // Mail überprüfen
+                    if (!checkMail(mail))
+                    {
+                        fehlermeldung += "Student " + name + " " + vorname +
+                                         "hat weder 'na' noch eine gültige Mail-Adresse eingetragen und konnte nicht hinzugefügt werden. (" +
+                                         sNummer + ")\n";
+                    }
+                    // Name überprüfen
                     if (string.IsNullOrEmpty(name) || name.Length > 15)
                     {
                         fehlermeldung += "Student " + name + " " + vorname + " hat einen leeren oder zu langen (>15 Zeichen) Nachnamen und konnte nicht hinzugefügt werden. (" + sNummer + ")\n";
                     }
+                    // Vorname überprüfen
                     if ( string.IsNullOrEmpty(vorname) || vorname.Length > 15)
                     {
                         fehlermeldung += "Student " + name + " " + vorname + " hat einen leeren oder zu langen (>15 Zeichen) Vornamen und konnte nicht hinzugefügt werden. (" + sNummer + ")\n";
                     }
                 }
             }
+            // Wenn fehlerhafte Studenten in DatagridView, dann Fehlermeldung ausgeben und abbrechen
             if (fehlermeldung != "")
             {
                 MessageBox.Show(fehlermeldung, "Fehler");
                 return;
             }
+            // Alles in Ordnung? Los gehts! :)
             for (int i = 0; i < alleMitgliederDataGridView.Rows.Count; i++)
             {
                 string name = (string)alleMitgliederDataGridView.Rows[i].Cells[0].Value;
@@ -167,13 +193,14 @@ namespace ClickDummyStudent
             query = "insert into Zuordnung_GruppeBeleg values(\"" + _gruppe.GruppenKennung + "\",\"" + _gruppe.Belegkennung + "\")";
             db.ExecuteQuery(query);
 
-
-            MessageBox.Show("Anmeldung abgeschlossen! \nIhre Gruppenkennung lautet: " + _gruppe.GruppenKennung + "\n(Wichtig für das spätere Anmelden!)", "ACHTUNG!!");
+            // Anmeldung in Datenbank abgeschlossen -> Warnung mit Case-Kennung (damit sie nicht sofort weggeklickt wird
+            MessageBox.Show("Anmeldung abgeschlossen! \nIhre Gruppenkennung lautet: " + _gruppe.GruppenKennung + "\n(Wichtig für das spätere Anmelden!)", "ACHTUNG!!", MessageBoxButtons.OK,MessageBoxIcon.Warning);
             MainForm form = new MainForm(_gruppe.GruppenKennung, _gruppe.Belegkennung);
             form.Show();
             this.Hide();
         }
 
+        // Student neu einfügen in Datenbank
         private void insertStudent(Student student, Gruppe gruppe)
         {
             Database db = new Database();
@@ -183,6 +210,7 @@ namespace ClickDummyStudent
             db.ExecuteQuery(query);
         }
 
+        // S-Nummer überprüfen
         private bool checkSNummer(string sNummer)
         {
             Database db = new Database();
@@ -201,6 +229,26 @@ namespace ClickDummyStudent
             }
 
             return true;
+        }
+
+        // Mail überprüfen
+        private bool checkMail(string mail)
+        {
+            if (mail == "na") return true;
+            Regex regExp = new Regex("\\b[!#$%&'*+./0-9=?_`a-z{|}~^-]+@[.0-9a-z-]+\\.[a-z]{2,6}\\b");
+            Match match = regExp.Match(mail.ToLower());
+            if (match.Success)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        // Close-Event überschreiben
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            Application.Exit();
         }
     }
 }

@@ -14,22 +14,27 @@ namespace ClickDummyStudent
     public partial class FormLeiterNeuEingeben : Form
     {
         public string Belegkennung;
+
+        // Konstruktor
         public FormLeiterNeuEingeben( string belegKennung)
         {
             InitializeComponent();
-            this.StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.CenterScreen;
 
-            this.Text = "Bitte tragen Sie den Leiter der Gruppe ein";
-            this.Belegkennung = belegKennung;
+            Text = "Bitte tragen Sie den Leiter der Gruppe ein";
+            Belegkennung = belegKennung;
         }
 
+        // Bestätigen geklickt
         private void button1_Click(object sender, EventArgs e)
         {
-            if (sNummerTextField.Text != ""
-                && nachnameTextField.Text != ""
-                && vornameTextField.Text != ""
-                && mailTextField.Text != "")
+            // auf leere Felder überprüfen
+            if(!(string.IsNullOrEmpty(sNummerTextField.Text) ||
+                string.IsNullOrEmpty(nachnameTextField.Text) || 
+                string.IsNullOrEmpty(vornameTextField.Text) ||
+                string.IsNullOrEmpty(mailTextField.Text)))
             {
+                // S-Nummer und Mail-Adresse überprüfen
                 if (!checkSNummer(sNummerTextField.Text))
                 {
                     MessageBox.Show("S-Nummer ist fehlerhaft oder schon in der Datenbank vorhanden.");
@@ -41,10 +46,11 @@ namespace ClickDummyStudent
                     return;
                 }
                 
+                // Student wird erst in nächster Form mit den restlichen gespeichert, hier noch nichts in Datenbank
                 Student leiter = new Student(nachnameTextField.Text, vornameTextField.Text, sNummerTextField.Text, mailTextField.Text, "Leitung");
                 FormMitgliederNeuEingeben form2 = new FormMitgliederNeuEingeben(leiter, this.Belegkennung);
                 form2.Show();
-                this.Hide();
+                Hide();
             }
             else
             {
@@ -52,13 +58,14 @@ namespace ClickDummyStudent
             }
         }
 
+        // Anmeldung abbrechen
         private void cancelButton_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
         
-
+        // S-Nummer auf Länge und Inhalt überprüfen
         private bool checkSNummer(string sNummer)
         {
             Database db = new Database();
@@ -79,17 +86,19 @@ namespace ClickDummyStudent
             return true;
         }
 
+        // Mail-Adresse überprüfen
         private bool checkMail(string mail)
         {
             Regex regExp = new Regex("\\b[!#$%&'*+./0-9=?_`a-z{|}~^-]+@[.0-9a-z-]+\\.[a-z]{2,6}\\b");
-            Match match = regExp.Match(mail);
+            Match match = regExp.Match(mail.ToLower());
             if (match.Success)
             {
                 return true;
             }
-            else return false;
+            return false;
         }
 
+        // Closing-Eventhandler überschreiben, damit Prozess beendet wird beim Abbrechen und nicht nur Fenster geschlossen wird
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
