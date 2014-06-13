@@ -35,3 +35,16 @@ C:\Users\Benjamin\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyS
 C:\Users\Benjamin\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.csproj.GenerateResource.Cache
 C:\Users\Benjamin\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.FormLeiterNeuEingeben.resources
 C:\Users\Benjamin\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.FormMitgliederNeuEingeben.resources
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\bin\Debug\ClickDummyStudent.exe.config
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.exe
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.pdb
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\bin\Debug\ClickDummyStudent.exe
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\bin\Debug\ClickDummyStudent.pdb
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\bin\Debug\Sybase.AdoNet4.AseClient.dll
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.csprojResolveAssemblyReference.cache
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.FormLeiterNeuEingeben.resources
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.FormMitgliederNeuEingeben.resources
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.LoginForm.resources
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.MainForm.resources
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.Properties.Resources.resources
+C:\Users\Felix\Documents\GitHub\ProgrammStudent\ClickDummyStudent\ClickDummyStudent\obj\Debug\ClickDummyStudent.csproj.GenerateResource.Cache

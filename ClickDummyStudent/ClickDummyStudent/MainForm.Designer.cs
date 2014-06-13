@@ -37,6 +37,7 @@
             this.saveButton = new System.Windows.Forms.Button();
             this.comboBoxThemen = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.zeitraumLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.mitgliederDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -106,12 +107,23 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "Thema:";
             // 
+            // zeitraumLabel
+            // 
+            this.zeitraumLabel.AutoSize = true;
+            this.zeitraumLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.zeitraumLabel.Location = new System.Drawing.Point(386, 330);
+            this.zeitraumLabel.Name = "zeitraumLabel";
+            this.zeitraumLabel.Size = new System.Drawing.Size(68, 15);
+            this.zeitraumLabel.TabIndex = 6;
+            this.zeitraumLabel.Text = "ZEITRAUM";
+            // 
             // MainForm
             // 
             this.AcceptButton = this.saveButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(768, 366);
+            this.Controls.Add(this.zeitraumLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxThemen);
             this.Controls.Add(this.saveButton);
@@ -135,6 +147,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn sNummer;
         private System.Windows.Forms.DataGridViewTextBoxColumn mail;
         private System.Windows.Forms.DataGridViewComboBoxColumn Rolle;
+        private System.Windows.Forms.Label zeitraumLabel;
     }
 }
 

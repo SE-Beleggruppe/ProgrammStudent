@@ -37,6 +37,8 @@ namespace ClickDummyStudent
                 saveButton.Enabled = false;
             }
 
+            getZeitraum(belegkennung);
+
             minAnzahl = getMinAnzahlMitglieder(belegkennung);
             maxAnzahl = getMaxAnzahlMitglieder(belegkennung);
 
@@ -372,5 +374,15 @@ namespace ClickDummyStudent
             }
             else return false;
         }
+
+        private void getZeitraum (string belegkennung) {
+
+            Database db = new Database();
+            DateTime anfang = Convert.ToDateTime(db.ExecuteQuery("select StartDatum from Beleg where Belegkennung=\"" + belegkennung + "\"").First()[0]);
+            DateTime ende = Convert.ToDateTime(db.ExecuteQuery("select EndDatum from Beleg where Belegkennung=\"" + belegkennung + "\"").First()[0]);
+
+            zeitraumLabel.Text = "Änderungsmöglichkeiten zwischen " + anfang.ToString("dd.MM.yyyy") + " und " + ende.ToString("dd.MM.yyyy");
+        }
+        
     }
 }
