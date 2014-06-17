@@ -52,9 +52,9 @@ namespace ClickDummyStudent
         private void commitButton_Click(object sender, EventArgs e)
         {
             // neues Passwort auf Vollständigkeit überprüfen
-            if (string.IsNullOrEmpty(newPasswortTextBox.Text))
+            if (string.IsNullOrEmpty(newPasswortTextBox.Text) || newPasswortTextBox.Text.Length > 25)
             {
-                MessageBox.Show("Bitte geben Sie ein Passwort ein, mit dem Sie später auf die Gruppe zugreifen können.", "Fehler");
+                MessageBox.Show("Bitte geben Sie ein Passwort ein (maximal 25 Zeichen), mit dem Sie später auf die Gruppe zugreifen können.", "Fehler");
                 return;
             }
             _gruppe.Password = newPasswortTextBox.Text;
